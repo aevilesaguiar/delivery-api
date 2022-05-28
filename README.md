@@ -344,7 +344,20 @@ ele adiciona no class loader de base, e o que desenvolvemos ele inclui no class 
 Toda vez que alteramos o que desenvolvemos ele reinicia o class loader de restart, e isso torna muito mais rápido o 
 desenvolvimento.
 
+## O que é injeção de Dependencias
 
+Injeção de dependência é um padrão de desenvolvimento de programas de computadores utilizado quando é necessário 
+manter baixo o nível de acoplamento entre diferentes módulos de um sistema.
+
+Injeção de Dependência é um é um padrão de projeto usado para evitar o alto nível de acoplamento de código.
+
+## Spring IOC Container 
+
+É a implementação de  injeção de dependências do Framework. É algo bem comum em Frameworks que implementam inversão de 
+controler/inversão no spring nós temos o Spring Context, ele é reponsável pela injeção de dependencias, como instanciar, de configurar 
+injetar Objetos em outros objetos.
+
+![img.png](img.png)
 
 ## Anotações
 
