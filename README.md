@@ -357,7 +357,13 @@ Injeção de Dependência é um é um padrão de projeto usado para evitar o alt
 controler/inversão no spring nós temos o Spring Context, ele é reponsável pela injeção de dependencias, como instanciar, de configurar 
 injetar Objetos em outros objetos.
 
-![img.png](img.png)
+No Spring quando rodamos uma aplicação o IOC Container, ele é inicializado e começa a instancializar os Beans que ele deve gerenciar.
+Bean(Dependence/dependencia) é nome dado a objetos gerenciados pelo o container do Spring. O Bean é instanciado, ele é configurado e 
+pode ser injetado em outros Beans que são gerenciados pelo o Container do spring.
+
+![image](https://user-images.githubusercontent.com/52088444/170840887-f49f75ea-8562-440b-8ea1-7c017f33e3d1.png)
+
+O Container de inversão de Controler do Spring é representado pela interface Aplication Context.
 
 ## Anotações
 
