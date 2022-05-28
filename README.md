@@ -274,6 +274,12 @@ Spring boot não é um framework só para desenvolvimento WEB, mas você pode us
 Spring boot é uma camada de abstração em cima do spring, é uma camada que simplifica ainda mais o desenvolvimento das nossas aplicações, inclusive
 spring MVC.
 
+## Spring MVC
+
+Spring MVC é um projeto do ecossistema Spring para desenvolver controladores web que recebem requisições HTTP, e develvem uma 
+resposta, podem ser ResrApi ou devolver html ou qualquer outro tipo de arquivo.
+
+O Spring MVC foi adicionado no projeto através do start "web" que incluimos na geração do projeto nas dependencias do maven.
 
 ## Spring vs Jakarta EE(Java EE)
 
@@ -326,14 +332,30 @@ No terminal eu posso fazer dessa forma também usando o comando:
 
 **escrevi o comando mvn clean package, posso ** ele limpa e gera o jar do nosso projeto. Ou seja ele gera o Build.
 
+Esse arquivo jar é o nosso projeto empacotado, eu posso encaminhar ele por email para que alguém pudesse utilizar o projeto.
+
+**mvn clean - limpa os arquivos anteriores do build
+
+## Class Loader
+
+Class loader ela é responsável por ler a estrutura das classes do nosso projeto e ficar na memória
+Ele cria duas class loader, um chamado de base e outro de restart. Tudo que não muda, por exemplo as bibliotecas
+ele adiciona no class loader de base, e o que desenvolvemos ele inclui no class loader restart.
+Toda vez que alteramos o que desenvolvemos ele reinicia o class loader de restart, e isso torna muito mais rápido o 
+desenvolvimento.
+
+
+
+## Anotações
+
+- @Controller : quando eu anoto uma classe com essa inscrição, eu estou dizendo que ela é reponsável por receber requisições web.
 
 
 
 
+## maneira de atualizar a aplicação quando ocorre alteração
 
-
-
-
+Incluir no maven o starter : 
 
 
 ## Metodos http /Verbos http
