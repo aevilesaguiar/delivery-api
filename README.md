@@ -298,6 +298,34 @@ cada um desses serviços de infraestrutura.
 
 
 
+## O que é Maven
+
+Maven é uma ferramenta de gerenciamento de dependencias e automação de build de projetos java.
+Não necessariamente precisa ser com spring.
+
+A estrutura de pastas é padronizada pelo o Maven.
+
+Na raiz do projeto temos os arquivo pom.xml. É onde ficam as configurações de maven no projeto.
+
+pom-> object project model
+
+o arquivo HELP.md é apenas um arquivo que podemos incluir alguma observação do projeto, mas não influencia em nada.
+
+mvnw.cmd e mvnw -> maven wrapper, ele possilita que executemos um maven no terminal, mesmo que não tenha um maven instalado você
+não precisa instalar no Sistema operacional. Ou seja ele baixa automaticamente da internet.
+
+Várias IDES já possuem um maven embutido dentro dele.
+
+O maven ajuda a fazer o build do projeto, mas como fazer esse build?
+Eu posso clicar em cima do projeto -> Run as -> Maven build, que eu rodo o build do maven. Vai aparecer as configurações.
+
+O package significa que eu quero empacotar, no console roda o maven  e ele gera o pacote, gera o jar dentro da pasta target
+dentro do projeto, dentro dele existem várias pastas , o mais importante é o jar.
+
+No terminal eu posso fazer dessa forma também usando o comando:
+
+**escrevi o comando mvn clean package, posso ** ele limpa e gera o jar do nosso projeto. Ou seja ele gera o Build.
+
 
 
 
