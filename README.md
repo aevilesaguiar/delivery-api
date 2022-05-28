@@ -351,6 +351,7 @@ manter baixo o nível de acoplamento entre diferentes módulos de um sistema.
 
 Injeção de Dependência é um é um padrão de projeto usado para evitar o alto nível de acoplamento de código.
 
+
 ## Spring IOC Container 
 
 É a implementação de  injeção de dependências do Framework. É algo bem comum em Frameworks que implementam inversão de 
@@ -364,6 +365,12 @@ pode ser injetado em outros Beans que são gerenciados pelo o Container do sprin
 ![image](https://user-images.githubusercontent.com/52088444/170840887-f49f75ea-8562-440b-8ea1-7c017f33e3d1.png)
 
 O Container de inversão de Controler do Spring é representado pela interface Aplication Context.
+
+## O que são pontos de Injeção
+
+Pontos de injeção é onde podemos fazer a injeção de objetos dentro dos nossos Beans.
+
+
 
 ## Anotações
 
