@@ -381,7 +381,41 @@ Pontos de injeção é onde podemos fazer a injeção de objetos dentro dos noss
 
 ## maneira de atualizar a aplicação quando ocorre alteração
 
-Incluir no maven o starter : 
+Incluir no maven o starter : spring-boot-devtools
+
+
+## Para fazer desambiguação de Bean
+
+- Usar a anotação @Primary além de componente
+
+- Outra forma de desambiguação : @Qualifier("nome") e também incluir na classe que recebe a injeção
+qualifier é um identificador que qualifica o nosso componente.
+Formas de descrever o identificador do qualifier: normal, urgente, prioritário mas isso não é padrão é apenas uma maneira.
+Um problema quando utilizamos o identificador qualifier é qu ela usa uma string, e uma String não é checada em tempo de
+compilação , e sim de execução. Além do que se houver mudança teremos que alterar em todos os locais, pois não será feito 
+a alteração automatica, e só saberemos após compilar se está correto
+
+ex:
+@Qualifier("urgente")
+private  Notificador notificadores;
+
+- Desambiguação de beans com anotação cutomizada , criamos uma anotação customizada.
+
+e utilizamos as anotações:
+@Qualifier
+@Retention(RetentionPolicy.RUNTIME)//diz quanto tempo deve permanecer onde foi usada, o runtime diz que ela pode ser 
+lida em tempo de execução
+
+## Spring Profiles
+
+O Spring Profiles ajuda a segregar as configurações do seu aplicativo e torná-los disponíveis apenas em determinados
+ambientes . Um aplicativo executado em muitos ambientes diferentes. Por exemplo, Dev, QA, Test, Stage, Production etc.
+
+O Spring Profiles ajuda a definir facilmente as configurações corretas nos ambientes corretos . Caso contrário, sem ter 
+Spring Profiles, é um grande problema gerenciar configurações específicas do ambiente. Por exemplo, sua aplicação pode 
+ter que depender das configurações externalizadas nos ambientes. Obviamente, isso é bastante difícil de manter em 
+sincronia. Caso contrário, você terá que escrever um monte de componentes semelhantes a fábricas para disponibilizar 
+certas coisas com base em determinados parâmetros de parâmetros específicos do ambiente.
 
 
 ## Metodos http /Verbos http

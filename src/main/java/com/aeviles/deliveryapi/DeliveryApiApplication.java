@@ -25,9 +25,11 @@ public class DeliveryApiApplication {
 
 		//injetando notificador
 		Notificador notificador = new NotificadorDeEmail();
-		//AtivacaoClienteService ativacaoCliente = new AtivacaoClienteService(notificador);
-		//ativacaoCliente.ativar(cliente1);
-		//ativacaoCliente.ativar(cliente2);
+
+
+		AtivacaoClienteService ativacaoCliente = new AtivacaoClienteService();
+		ativacaoCliente.ativar(cliente1);
+		ativacaoCliente.ativar(cliente2);
 
 
 

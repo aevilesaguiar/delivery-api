@@ -3,8 +3,10 @@ package com.aeviles.deliveryapi.noficacao;
 import com.aeviles.deliveryapi.model.Cliente;
 import org.springframework.stereotype.Component;
 
+@TipoDoNotificador(NivelUrgencia.URGENTE)
 @Component
 public class NotificadorSms implements Notificador {
+
 
     @Override
     public void notificar(Cliente cliente, String mensagem){
