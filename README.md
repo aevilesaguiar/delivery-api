@@ -417,6 +417,22 @@ ter que depender das configurações externalizadas nos ambientes. Obviamente, i
 sincronia. Caso contrário, você terá que escrever um monte de componentes semelhantes a fábricas para disponibilizar 
 certas coisas com base em determinados parâmetros de parâmetros específicos do ambiente.
 
+Esse profile requer um nome, esse componente notificador vai ser registrado apenas se estiver rodando no ambiente "prod"
+
+@Profile("prod")
+
+Eu tenho que incluir no application.properties ->spring.profiles.active=prod
+
+Eu posso ter vários profiles no application.properties, tenho apenas que separar por vigula e definir os componentes de configuração
+com as anotações @Profiles
+Ex:spring.profiles.active=prod, mysql, s3, filesystem
+Eu posso combinar , e ajuda a deixar a plicação flexível e eseparar ambientes.
+
+## Mock
+
+Na programação orientada a objeto, objetos mock ou fictícios são objetos simulados que imitam o comportamento de 
+objetos reais. Os objetos Mocks são geralmente usados em testes de unidade.
+
 
 ## Metodos http /Verbos http
 
