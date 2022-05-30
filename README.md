@@ -585,6 +585,174 @@ e eu crio as variaveis. E associo com através de uma expression do spring${}
 Ao invés de incluir configurações com proriedades customizadas, podemos criar uma classe que representa as configurações
 de um determinado grupo. E ao invés de injetar valor por valor podemos injetar um objeto dessa classe.
 
+## Persistencia de Dados (capitulo3)
+
+- O que é persistencia de dados?
+é um termo usado para dizer que queremos preservar os dados por um tempo, para além da utilização do software.
+Ex: quando cadastramos um cliente em um sistema, nós queremos que esses dados sejam persistidos em algum local
+de forma que sempre que quizermos consultar uma lista de cliente , esse dado esteja preservado. Nós usamos banco de dados
+para fazer a persistencia. No nosso exemplo vamos utilizar o MySql
+
+
+![img_5.png](img_5.png)
+
+Nós temos o código java -> temos um driver JDBC -> temos o  BD mySQL
+
+- Driver JDBC: Driver JDBC é um componente de software que intermedia  o acesso de uma aplicação java com o BD, nesse caso
+o MySql. Cada Banco de dados tem pelo o menos uma implementação de JDBC. O código java conversa apenas com o JDBC, e 
+ele faz a comunicação com o Banco de dados.
+
+Exemplo de uma persistencia sem o uso de JPA:
+
+![img_6.png](img_6.png)
+
+Exemplo de consulta sem JPA:
+
+![img_7.png](img_7.png)
+
+- O que é ORM? Object-Relational Mapping , Mapeamento Objeto Relacional é uma técnica para mapeamento de classes que representam
+entidades para tabelas de um Banco de Dados relacional. O ORM simplifica a persistencia de dados, de forma a facilitar para 
+o programador trabalhe mais com POO e menos no modelo Relacional.
+
+**Mapeamento Objeto-Relacional**
+
+![img_8.png](img_8.png)
+
+![img_9.png](img_9.png)
+
+Do lado esquerdo nós temos uma representação Relacional no lado direito temos a representação do modelo Orientado a Objetos
+
+- Persistencia com ORM:
+
+![img_10.png](img_10.png)
+
+o driver JDBC não fala mais diretamente com o código java, mas sim o o ORM.
+
+Persistencia com ORM - Mapeamento objeto realcional, orm esta usando as mestas informações
+![img_11.png](img_11.png)
+
+Eu faço persistencia através de um objeto. Nesse caso pessoa, e em relacional o Objeto Pessoa é o nome da tabela
+
+Se eu quiser consultar uma pessoa:
+
+![img_12.png](img_12.png)
+
+- SQL trabalha diretamente contra tabelas de banco de dados relacional, registros e campos, considerando que JPQL 
+trabalha com Java classes e instâncias. Por exemplo, a JPQL consulta pode recuperar uma entidade objeto em vez de 
+campo resultado definido a partir de um banco de dados, como com o SQL.
+
+
+## O que é Java Persistence API(JPA)?
+
+
+Java Persistence API é uma API padrão da linguagem Java que descreve uma interface comum para frameworks de persistência
+de dados. A JPA define um meio de mapeamento objeto-relacional para objetos Java simples e comuns, denominados beans de
+entidade. JPA é uma especificação JEE, uma solução ORM para persistencia de dados, que é padronizada para desenvolvimento
+de aplicações java. JPA define a forma de mapeamento Objeto Relacional possui uma API de consultas e modificaçõess de dados,
+e a linguagem de consulta JPQL, na classe java nós utilizamos anotações
+
+
+- O que é Hibernate? 
+Hibernate é uma implementação da especificação JPA, ou seja é o produto que vc coloca no seu produto e usa ele.
+- Ou seja JPA descreve como vai funcionar a implementação e Hibernate implementa a solução de acordo coma descrição/implementação.
+
+
+
+
+![img_13.png](img_13.png)
+
+A JPA, é uma especificação Java para acessar, persistir e gerenciar dados entre objetos Java e um banco de dados 
+relacional. O JPA foi definido como parte da especificação EJB 3.0 como um substituto para a especificação EJB 2 CMP 
+Entity Beans. A JPA veio da necessidade de simplificar a complexidade do EJB para persistir dados.
+
+A JPA agora é considerada a abordagem padrão da indústria para ORM – Object to Relational Mapping.
+Mas independente do framework ORM utilizado, seja o Hibernate, o EclipseLink, o TopLink, o OpenJPA, etc, isso não 
+importa, a aplicação será portável para qualquer banco de dados que possua driver JDBC. E não será preciso reescrever 
+o código-fonte, pois ele será o mesmo para todos os bancos de dados.
+
+Como funciona a JPA – Ele funciona através de qualquer framework ORM (Mapeamento Objeto Relacional) baseado na especificação JPA.
+Pode ser o framework Hibernate, EclipseLink, TopLink, OpenJpa, etc.
+
+![img_14.png](img_14.png)
+
+Nesse diagrama podemos ver o mundo exterior ao sistema onde os usuários podem acessar a aplicação de qualquer dispositivo,
+seja um computador, um tablet, um smartphone ou um notebook, eles vão através da aplicação chamar a camada ORM, onde e
+localiza a interface JPA e o framework utilizado seja o Hibernate, o EclipseLink, o TopLink, o OpenJPA, etc. 
+E nesse diagrama podemos ver detalhadamente a divisão entre a interface JPA e o framework ORM utilizado.
+
+Agora vou citar alguns objetos da API JPA:
+
+EntityManagerFactory – Interface usada para interagir com a fábrica do gerenciador de entidades para a unidade de persistência.
+Quando o aplicativo terminar de usar a fábrica do gerenciador de entidades e/ou no encerramento do aplicativo, o aplicativo 
+deve fechar a fábrica do gerenciador de entidades. Depois que um EntityManagerFactory é fechado, todos os seus gerenciadores 
+de entidade são considerados no estado fechado.
+
+EntityManager – Interface usada para interagir com o contexto de persistência.
+Uma instância de EntityManager está associada a um contexto de persistência. Um contexto de persistência é um conjunto de 
+instâncias de entidade em que, para qualquer identidade de entidade persistente, existe uma instância de entidade única. 
+Dentro do contexto de persistência, as instâncias de entidade e seu ciclo de vida são gerenciados. A API EntityManager é 
+usada para criar e remover instâncias de entidade persistentes, para localizar entidades por sua chave primária e para consultar entidades.
+O conjunto de entidades que podem ser gerenciadas por uma determinada instância EntityManager é definido por uma unidade 
+de persistência. Uma unidade de persistência define o conjunto de todas as classes relacionadas ou agrupadas pelo aplicativo 
+e que devem ser colocadas em seu mapeamento em um único banco de dados.
+
+Agora vou citar algumas anotações da API JPA:
+@Entity – Serve para a API JPA saber que a classe anotada com @Entity corresponde a uma tabela da base de dados. 
+Uma entidade corresponde a uma tabela.
+@Table – É usada em conjunto com a anotação @Entity, serve para a API JPA saber o nome da tabela, em que a classe anotada 
+com @Table, tem um atributo “name”, que contém o nome da tabela.
+
+Abaixo segue um exemplo prático da utilização das anotações @Entity e @Table.
+
+Abaixo a ilustração da classe Blog, como podem ver ela possui as anotações @Entity e @Table. E na anotação @Table,
+o atributo name, está preenchido com o nome da tabela “blog”.
+
+![img_15.png](img_15.png)
+
+Abaixo a ilustração da classe Categoria, como podem ver ela possui as anotações @Entity e @Table. E na anotação @Table, 
+o atributo “name”, está preenchido com o nome da tabela “categoria”.
+
+![img_16.png](img_16.png)
+
+
+
+## Como fica a Persistencia com banco de dados com JPA
+
+
+![img_17.png](img_17.png)
+
+O nosso código java utiliza a API do JPA, ele usa métodos , interfaces e tudo mais, quem implementa essas interfaces é o hibernate
+eeé o hibernate que conversa com Driver JDBC.
+
+## Diferença entre JPA E JDBC
+
+JPA é mais rapido no desenvolvimento, e menos trabalhoso. Já que no JDBC você usa SQL nativo para trabalhar diretamente com os registros, enquanto que no JPA você trabalha com objetos criados a partir desses registros, concluímos que a performance da primeira tecnologia é maior que a da segunda.
+
+Diferença Hibernate e JPA
+
+
+
+
+
+## Flyway
+
+O Flyway é um framework que permite o versionamento e gerenciamento do Banco de dados, com ele podemos controlar a
+evolução dos elementos que compõem uma determinada base de dados, sendo eles Tabelas, Sequences, Views, entre outros.
+
+
+Podemos utilizar o Flyway para manipular diferentes sistemas de Banco de dados relacionais, isso é possível porque ele é
+desenvolvido baseado na API JDBC onde basta especificar o Driver do banco e realizar as migrações.
+
+O Flyway pode ser utilizado através de linha de comando, ou utilizando ferramentas como Maven, Gradle, Ant, SBT,
+entre outras.
+
+Criando os Scripts
+
+Os scripts são criados utilizando a linguagem SQL ou através de uma API Java, neste exemplo utilizaremos SQL, o Flyway
+segue uma convenção para o nome dos Scripts, que é V{numero da versão}__<nome_do_script>.sql, estes scripts devem ser
+adicionados dentro do diretório sql(são dois underscore após o numero da versão).
+
+
 
 ## Metodos http /Verbos http
 
@@ -650,44 +818,16 @@ de objeto java para xml ou outros. -->
 		
 		
 		
-		
-		
-## Diferença entre JPA E JDBC
-
-JPA é mais rapido no desenvolvimento, e menos trabalhoso. Já que no JDBC você usa SQL nativo para trabalhar diretamente com os registros, enquanto que no JPA você trabalha com objetos criados a partir desses registros, concluímos que a performance da primeira tecnologia é maior que a da segunda.
-		
-Diferença Hibernate e JPA
-
-
-
-
-
-## Flyway
-
-O Flyway é um framework que permite o versionamento e gerenciamento do Banco de dados, com ele podemos controlar a 
-evolução dos elementos que compõem uma determinada base de dados, sendo eles Tabelas, Sequences, Views, entre outros.
-
-
-Podemos utilizar o Flyway para manipular diferentes sistemas de Banco de dados relacionais, isso é possível porque ele é
-desenvolvido baseado na API JDBC onde basta especificar o Driver do banco e realizar as migrações.
-
-O Flyway pode ser utilizado através de linha de comando, ou utilizando ferramentas como Maven, Gradle, Ant, SBT, 
-entre outras.
-
-Criando os Scripts
-
-Os scripts são criados utilizando a linguagem SQL ou através de uma API Java, neste exemplo utilizaremos SQL, o Flyway 
-segue uma convenção para o nome dos Scripts, que é V{numero da versão}__<nome_do_script>.sql, estes scripts devem ser 
-adicionados dentro do diretório sql(são dois underscore após o numero da versão).
-
+	
 ## Referencias
 
 - (Códigos http)[https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml#http-status-codes-1]
 
 - https://httpstatus.com/
--  https://dev.mysql.com/doc/connector-j/8.0/en/connector-j-reference-jdbc-url-format.html
+- https://dev.mysql.com/doc/connector-j/8.0/en/connector-j-reference-jdbc-url-format.html
 
-
+- https://www.tutorialspoint.com/pg/jpa/jpa_jpql.htm
+- 
 
 
 
