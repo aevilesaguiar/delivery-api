@@ -1,15 +1,13 @@
 package com.aeviles.deliveryapi.noficacao;
 
 import com.aeviles.deliveryapi.model.Cliente;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Primary;
+
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-@Profile("prod") //esse profile requer um nome, esse componente notificador vai ser registrado apenas se estiver rodando no ambiente "prod"
-//@Qualifier("urgente")
-@TipoDoNotificador(NivelUrgencia.NORMAL)
-@Primary //Bean Principal para fazer a desabiguação
+@Profile("dev") //esse profile requer um nome, esse componente notificador vai ser registrado apenas se estiver rodando no ambiente "prod"
+//@TipoDoNotificador(NivelUrgencia.NORMAL)
+@Component
 public class NotificadorDeEmail implements Notificador {
 
     public NotificadorDeEmail(){

@@ -406,10 +406,14 @@ e utilizamos as anotações:
 @Retention(RetentionPolicy.RUNTIME)//diz quanto tempo deve permanecer onde foi usada, o runtime diz que ela pode ser 
 lida em tempo de execução
 
+
+
 ## Spring Profiles
 
 O Spring Profiles ajuda a segregar as configurações do seu aplicativo e torná-los disponíveis apenas em determinados
 ambientes . Um aplicativo executado em muitos ambientes diferentes. Por exemplo, Dev, QA, Test, Stage, Production etc.
+
+é uma forma de separar as aplicações em ambientes diferentes.
 
 O Spring Profiles ajuda a definir facilmente as configurações corretas nos ambientes corretos . Caso contrário, sem ter 
 Spring Profiles, é um grande problema gerenciar configurações específicas do ambiente. Por exemplo, sua aplicação pode 
@@ -428,11 +432,153 @@ com as anotações @Profiles
 Ex:spring.profiles.active=prod, mysql, s3, filesystem
 Eu posso combinar , e ajuda a deixar a plicação flexível e eseparar ambientes.
 
+
+## Bean
+
+O @Bean serve para exportar uma classe para o Spring, para que ele consiga carregar essa classe e fazer injeção de
+dependência dela em outra classes.
+
+Todos os Beans no spring possuem um ciclo de vida, ou seja as fazes desde existencia desse bean(quando foi injetado) até
+quando ele deixa de existir no container
+
+As 3 fazes do ciclo de vida são:
+
+- A fase inicialização;
+- Onde vai usar o bean;
+- A fase de destruição do Bean;
+
+Podemos implementar métodos de callback para o ciclo de vida, ou seja metodos que declaramos e são chamados pelo o 
+próprio container quando passa por alguma fase do ciclo de vida;
+
+
+@PostConstruct
+public void init(){
+System.out.println("INIT" + notificadores);
+}
+//destroy será chamado um pouco antes do bean destuir
+@PreDestroy
+public void destroy(){
+System.out.println("DESTROY");
+}
+
+
+    public void ativar(Cliente cliente) {
+
+        cliente.ativar();
+        System.out.printf("Seu cadastro %s  no sistema está ativo \n", cliente.getNome());
+
+
+    }
+}
+
+-> Lembrando que usamos as anotações:     @PostConstruct ,    @PreDestroy, as mesmas não são do Spring e sim do  javax.annotation.
+
+
+Resultado no console
+
+2022-05-30 10:58:59.833  INFO 8844 --- [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 955 ms
+NotificadorEmail: Real
+INITcom.aeviles.deliveryapi.noficacao.NotificadorSms@46f6e363
+2022-05-30 10:59:00.129  INFO 8844 --- [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2022-05-30 10:59:00.162  INFO 8844 --- [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2022-05-30 10:59:00.170  INFO 8844 --- [  restartedMain] c.a.deliveryapi.DeliveryApiApplication   : Started DeliveryApiApplication in 1.643 seconds (JVM running for 1.989)
+/****************Ativando Clientes**************/
+Seu cadastro Joao Pedro  no sistema está ativo
+Seu cadastro Maria Silva  no sistema está ativo
+DESTROY
+
+
+Outra forma, seria criar uma classe de configuração:
+
+
+@Configuration
+public class ServiceConfig {
+
+    @Bean(initMethod = "init", destroyMethod = "destroy")
+    public  AtivacaoClienteService ativacaoClienteService(){
+        return new AtivacaoClienteService();
+    }
+}
+
+onde na anotação @Bean você inclui o init e o destroy
+
+
+
+
 ## Mock
 
 Na programação orientada a objeto, objetos mock ou fictícios são objetos simulados que imitam o comportamento de 
 objetos reais. Os objetos Mocks são geralmente usados em testes de unidade.
 
+
+## Observer
+
+um padrão de projeto bastante importante e muito utilizado, o padrão Observer. O padrão Observer é utilizado quando 
+se precisa manter os objetos atualizados quando algo importante ocorre.
+
+O Observer é um padrão de projeto de software que define uma dependência um-para-muitos entre objetos de modo que 
+quando um objeto muda o estado, todos seus dependentes são notificados e atualizados automaticamente.
+
+O Java também fornece suporte para o padrão de projeto Observer. As API’s mais gerais são a interface Observer e a 
+classe Observable no pacote java.util. Elas são bastante semelhantes ao que foi dito aqui, porém possuem bem mais 
+recursos que podem ajudar a vida do desenvolvedor em algumas circunstâncias.
+
+Em geral a classe Observable é como o nosso Subject discutido anteriormente, porém Observable é uma classe e não uma 
+interface. Alguns dos métodos do Observable são addObserver(), deleteObserver(), notifyObservers(), setChanged(). 
+A classe Observable nada mais faz do que monitorar todos os observadores e os notificar sobre alguma alteração no estado.
+
+Um detalhe importante é que antes de Subject chamar o método update() do seus assinates (Observers) deve-se chamar o 
+método setChanged() que seta o estado interno do objeto para true, ou seja, chamando o método diz-se que o estado foi
+alterado e os Observadores devem ser notificados. Quando este método de Subject é chamado aciona-se o método 
+notifyObservers() chamando o método update() de cada Observador passando o objeto e os dados alterados. 
+Após as notificações o setChanged() é novamente setado como falso e só chamará o método notifyObservers()
+novamente quando for acionado.
+
+De uma forma geral o padrão Observer deixa o acoplamaneto mais baixo entre nossas classes. E o Spring implementa esse 
+padrão o qual é chamado de inverter hendler. 
+
+O Spring fornece a classe private ApplicationEventPublisher que permite que publiquemos eventos.
+
+Foi criado um classe que só escuta ->ApplicationEventPublisher. 
+
+@Component
+public class AtivacaoClienteService {
+
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
+
+    public void ativar(Cliente cliente) {
+        cliente.ativar();
+
+        eventPublisher.publishEvent(new ClienteAtivadoEvent(cliente));
+    }
+}
+
+## Configurações 
+
+Uma boa prática de programação é não incluir configurações hardCoded dentro do código, um exemplo se irá incluir uma porta, 
+um ip de um  banco de dados, um servidor de e-mail, nunca escrever no código java.
+
+E projetos Spring boots, podemos configurar em arquivos de propriedade java os properties files, arquivos yam/yml, em variáveis
+de ambiente do SO, também por parâmetros de linha de comando.
+
+No SpringBoot por padrão vem o arquivo application.properties. Nesse arquivo podemos fazer diversas configurações, as que já 
+vem do springboot e também podemos criar
+
+Listagem das propriedade que o Spring boot fornece:
+
+- https://docs.spring.io/spring-boot/docs/current/reference/html/application-properties.html
+
+podemos por exemplo mudar a porta a padrão é 8080: server.port=8081 aí teriamos que acessar :http://localhost:8081/hello
+
+
+## Criando e acessando propriedade customizadas com @Value
+
+![img_1.png](img_1.png)
+
+e eu crio as variaveis. E associo com através de uma expression do spring${}
+
+![img_4.png](img_4.png)
 
 ## Metodos http /Verbos http
 
