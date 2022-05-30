@@ -580,6 +580,12 @@ e eu crio as variaveis. E associo com através de uma expression do spring${}
 
 ![img_4.png](img_4.png)
 
+## Acessando propriedade com @ConfigurationProperties
+
+Ao invés de incluir configurações com proriedades customizadas, podemos criar uma classe que representa as configurações
+de um determinado grupo. E ao invés de injetar valor por valor podemos injetar um objeto dessa classe.
+
+
 ## Metodos http /Verbos http
 
 Métodos http também conhecido como verbos http. Através dos métodos http nós dizemos para o servidor qual
