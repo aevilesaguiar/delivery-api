@@ -92,138 +92,6 @@ podemos ter sites, sistemas internos consumindo a sua API. E podmos também expo
 - enotas : https://docs.enotasgw.com.br/docs  (enotas facilita pois expôe sua API e através do enotas pois podemos emitir notas fiscais para diversas prefeituras - paga)
 - outras milhares de APIS pagas ou gratuitas 
 
-## O que é REST
-
-REST:acrônimo REpresentational State Transfer, é um estilo arquitetural para desenvolver WEB API'S, ou seja para desenvolver WEB SERVICES,
-REST é uma especificação que define a forma de comunicação entre componentes de software na web, independente da linguagem de programação usada.
-
-REST surgiu nos anos 2000, a partir da tese de PHD de um cientista chamado Roy Fielding, seu intuito era formalizar um conjunto de melhores práticas
-para desenvolvimento de webServices, essas melhores práticas são chamadas de constraints(regras) que devem ser seguidas para uma API ficar em conformidade com
-REST, então uma RESTAPI é uma API que segue as regras especificadas por Roy Thomas Fielding.
-
-Rest é um estilo arquitetural utiliado para desenvolver REST APIS/ WEB Services, ele foi desenvolvido para usar protocolos que já existem, como o HTTP.
-
-Para que uma aplicação possa consumir uma REST API ela precisa conheceer apenas o protocolo HTTP não precisa instalar nada. E essa facilidade de integração 
-entre os sistemas, fez com que REST se torna-se a forma mais popular para desenvolver webServices. As APIS mostradas acima utilizam a arquitetura REST.
-
-
-## Por que usar REST?
-
-- Separação entre cliente(quem consome a api) e servidor(quem provê a API), dessa forma nós temos uma maior flexibilidade e portabilidade.
-- Escalabilidade, se um servidor não está sendo sufiente , podemos incluir outros;
-- Independência de linguagem;
-- As APIS podem interagir entre si;
-
-
-## Constraints
-
-- Cliente-servidor( nós precisamos de um cliente que pode ser uma aplicação front-end, mobille, uma outra API enviando requisições para um servidor, as aplicações
-  cliente servidor podem evoluir sem inteferir no outro, inclusive um cliente x servidor pode ser substituído sem interferir em nada, desde que a interface
-  entre eles seja inalterada.
-
-- Stateless significa sem estado, a aplicação não deve ter estado, Roy Fielding se inspirou no protocolo http para essa constraint, na prática quer dizer que
-  essa requisição feita ao servidor da API , deve conter tudo para que seja devidamente processada. O servidor não pode manter uma seção.
-- Cache, a API pode fazer cache das requisições, cache é uma memória de consulta rápida, ela melhora a escalabilidade do servidor, pois reduzimos o numeros de hits
-  no servidor, ou seja numero de acesso. (possibilidade de incluir quando necessário)
-- Interface Uniforme (desacopla a arquitetura) para ficar de acordo com essa constraint devemos identificar os recursos do sistema usando URI's seguindo umpadrão;
-- devemos usar o padrão do protocolo de comunicação para interagir com a API, geralmente usamos o verbo do protocolo http( put, get, delete, post...)
-- A resposta de uma requisição deve ser padronizada;
-- Sistema em camadas, a possibilidade entre o cliente que consome e o servidor que hospeda a API ter outros servidores no meio do caminho,
-  esses servidores podem oferecer uma camada de segurança, de cache, balanceamento de carga, o cliente não deve conhecer quantas camadas possuem no meio
-- Código sobe demanda(opcional) o servidor pode enviar como resposta de um código;
-
-
-
-## PROTOCOLO HTTP
-
-O modelo arquitetural REST independe de linguagem e tecnologia, REST não restringe o uso de um protocolo em particular, apesar do modelo ser independente
-de protocolo, para colocar REST m prática é necessário o uso de um, e o mais usado é o protocolo http.
-
-COMO FUNCIONA O PROTOCOLO HTTP
-
-CLIENTE <=> REQUISIÇÃO X RESPOSTA<=> SERVIDOR
-
-COMPOSIÇÃO DA REQUISIÇÃO
-
-[MÉTODO] [URI] HTTP/[VERSÃO]
-[Ccabeçalhos]
-
-[CORPO/PAYLOAD]
-
-
------------------------------
-POSTprodutos HTTP/.
-content-Type: application/json
-Accept: application/json
-{
-"nome": "Notebook",
-"preco": 2100.00
-}
-
-Método -> indica a ação que queremos que seja executado; (GET, POST, PUT, DELETE)
-
-
-URI-> caminho que identifica o que queremos dentro do servidor http. POST /produtos em palavras cadastrando produtos
-
-Corpo/Payload, não é obrigatório, e é nesse corpo que enviamos oa dados para API
-
-composição da resposta
-
-
-HTTP /[VERSAO][STATUS]
-[Cabeçalhos]
-
-[CORPO]
-
-
------------------------------
-HTTP/1.1 201 Created
-Location: /produtos/331
-content-Type: application/json
-{
-"cosdigo":331,
-"nome": "Notebook",
-"preco": 2100.00
-}
-
-status serve para descrever o resultado da requisição (201 created- um recurso foi criado com sucesso)
-corpo da resposta: é onde fica o conteudo da resposta
-
-
-## RECURSOS REST
-
-Um recurso é qualquer coisa exposta na web, é algo que tem importancia para ser refenciado no software. Exemplo: documento, pagina, video, foto,
-até mesmo um processo de negócio, em um ecommerce um produto pode ser considerado um recurso.
-
-Singleton Resource.Um recurso é uma instancia de uma determinada classe. Um recurso que significa uma unica coisa é chamado de singleton Resource.
-Os recusos podem ser agrupados em coleções(collection Resource)Coleção de Produtos é um recurso.
-
-## IDENTIFICANDO RECURSOS
-
-REST utiliza URI para identificar os Recursos, URI é uniforme Resource Identifier, identificador de recurso uniforme, nada mais é que um conjunto
-de caracteres  que tem como objetivo dar um endereço para os recursos de forma não ambigua.
-
-Quando modelamos um recurso temos que pensar em um tipo de URI para identifica-los.
-
-URI X URL: URL é um tipo de URI.
-
-Ex: /listasProdutos
-
-url Completa: httpd://api.algamarket.com.br/listasProdutos
-
-Não é uma boa pratica identificar uma URI dessa forma
-
-o corretos é : /produtos
-sem identificar ação
-
-RECURSO UNICO
-/produto/{codigo}
-
-url Completa: httpd://api.algamarket.com.br/produtos/331
-
-temos que usar o recurso sempre no plural, pois facilita o consumidor da API e quem desenvovle
-
-
 # Spring e Injeção de Dependências
 
 
@@ -888,6 +756,209 @@ Para especificar que não aceita nulo é necessário incluir dentro da anotaçã
 
     @Column(name = "taxa_frete", nullable = false)
     private BigDecimal taxaFrete;
+
+
+
+## O que é REST
+
+REST:acrônimo REpresentational State Transfer, é um estilo arquitetural para desenvolver WEB API'S, ou seja para desenvolver
+WEB SERVICES,
+REST é uma especificação que define a forma de comunicação entre componentes de software na web, independente da linguagem 
+de programação usada.
+
+REST surgiu nos anos 2000, a partir da tese de PHD de um cientista chamado Roy Fielding, seu intuito era formalizar um 
+conjunto de melhores práticas
+para desenvolvimento de webServices, essas melhores práticas são chamadas de constraints(regras) que devem ser seguidas 
+para uma API ficar em conformidade com
+REST, então uma RESTAPI é uma API que segue as regras especificadas por Roy Thomas Fielding.
+
+Rest é um estilo arquitetural utiliado para desenvolver REST APIS/ WEB Services, ele foi desenvolvido para usar protocolos 
+que já existem, como o HTTP.
+
+![img_21.png](img_21.png)
+
+Essa comunicação é feita utilizando a aespecificação REST
+
+Para que uma aplicação possa consumir uma REST API ela precisa conhecer apenas o protocolo HTTP não precisa instalar nada.
+E essa facilidade de integração
+entre os sistemas, fez com que REST se torna-se a forma mais popular para desenvolver webServices. As APIS mostradas acima 
+utilizam a arquitetura REST.
+
+
+
+
+## Por que usar REST?
+
+- Separação entre cliente(quem consome a api) e servidor(quem provê a API), dessa forma nós temos uma maior flexibilidade 
+e portabilidade.
+- Escalabilidade, se um servidor não está sendo sufiente , podemos incluir outros;
+- Independência de linguagem;
+- As APIS podem interagir entre si, além de serem consumidas ´por outras aplicações;
+- demanda alta de mercado
+- REST ajuda muito a fazer integrações
+
+
+## Constraints (melhores práticas)
+
+- Cliente-servidor:( nós precisamos de um cliente que pode ser uma aplicação front-end, mobille, uma outra API enviando 
+requisições para um servidor, as aplicações cliente servidor podem evoluir sem inteferir no outro, inclusive um 
+cliente x servidor pode ser substituído sem interferir em nada, desde que a interface entre eles seja inalterada.
+
+- Stateless: significa sem estado, a aplicação não deve ter estado, Roy Fielding se inspirou no protocolo http para essa 
+constraint, na prática quer dizer que essa requisição feita ao servidor da API , deve conter tudo para que seja devidamente
+processada. O servidor não pode manter uma seção.
+
+- Cache: , a API pode fazer cache das requisições, cache é uma memória de consulta rápida, ela melhora a escalabilidade 
+do servidor, pois reduzimos o numeros de hits no servidor, ou seja numero de acesso. (possibilidade de incluir quando necessário)
+
+- Interface Uniforme (desacopla a arquitetura) para ficar de acordo com essa constraint devemos identificar os recursos 
+do sistema usando URI's seguindo um padrão. Devemos usar o padrão do protocolo de comunicação para interagir com a API, 
+geralmente usamos o verbo do protocolo http( put, get, delete, post...). A resposta de uma requisição deve ser padronizada,
+incluindo informações de como o cliente deve tratá-la;
+
+- Sistema em camadas, a possibilidade entre o cliente que consome e o servidor que hospeda a API ter outros servidores no meio do caminho,
+  esses servidores podem oferecer uma camada de segurança, de cache, balanceamento de carga, o cliente não deve conhecer quantas camadas possuem no meio
+
+- Código sobe demanda(opcional) o servidor pode enviar como resposta de um código que deve ser utilizado no cliente. (Pouco usada)
+
+
+## REST X RESTFUL
+
+A diferença entre os termos são conceituais, REST é o estilo arquitetural que possui as constraints ou seja é a especificação,
+RESTful API é uma API desenvolvida em conformidade com as constraints, ou seja uma REST API segue todas as contraints obrigatórias.
+
+
+
+## PROTOCOLO HTTP
+
+O modelo arquitetural REST independe de linguagem e tecnologia, REST não restringe o uso de um protocolo em particular, apesar do modelo ser independente
+de protocolo, para colocar REST m prática é necessário o uso de um, e o mais usado é o protocolo http.
+
+COMO FUNCIONA O PROTOCOLO HTTP
+
+CLIENTE <=> |REQUISIÇÃO X RESPOSTA |<=> SERVIDOR
+
+![img_22.png](img_22.png)
+
+COMPOSIÇÃO DA REQUISIÇÃO
+
+![img_23.png](img_23.png)
+
+Para formar uma requisição precisamos de um método/URI/versão do protocolo http/cabeçalhos e corpo.
+As vezes chamamos os métodos de verbos http
+
+![img_24.png](img_24.png)
+
+
+Método -> indica a ação que queremos que seja executado; (GET, POST, PUT, DELETE)
+
+- get: o metodo get solicita que seja devolvido nas repostas os dados que precisamos
+- post: o metodo post submete dados para o servidor, usamos muito para adicionar dados no BANCO DE DADOS
+
+
+URI-> caminho que identifica o que queremos dentro do servidor http. POST /produtos em palavras cadastrando produtos
+**Composição de Requisição**
+
+![img_25.png](img_25.png)
+Apesar de existir a versão 2.0 do http a mais comum ainda é a 1.1 .
+
+![img_26.png](img_26.png)
+Os cabeçalhos são informações sobre a requisição. Eles definem nomes de chaves e valores, que podem ser usados pelo o servidor
+para interpretar a requisição e executar a operação. Temos vários cabeçalhos pré-definidos no protocolo HTTP, mas podemos 
+criar os nossos próprios cabeçalhos customizados também. 
+No cabeçalho acima nós temos o Content-Type, que define qual tipo de conteúdo está sendo enviada no corpo da requisição.
+Estamos dizendo que a requisição está indo com um corpo no formato json(um formato de transporte de dados), o cabeçalho content-Type 
+é muito importante para o servidor saber  como interpretar a mensagem no corpo corretamente.
+Temos o Accept: que define quais tipos de conteúdo são aceitos como uma resposta, nesse exemplo estamos especificando um, que
+é o json, isso quer dizer que o servidor obrigatoriamente deve retornar uma resposta nesse formato especificado.
+Se o servidor não puder devolver uma resposta neste formato é melhor que ele retorne um erro.
+
+Em relação ao corpo de uma requisição ele não é obrigatório, depende do método http utilizado.
+Basicamente é no corpo da requisição que enviamos os dados do cliente para o servidor.
+
+![img_27.png](img_27.png)
+Nesse exemplo estamos enviando um produto.
+
+**Composição da resposta**
+
+![img_29.png](img_29.png)
+
+Uma versão também possui componentes importantes, como a versão do protocolo http, status, cabeçalho e corpo.
+
+![img_28.png](img_28.png)
+O status serve para descrever o status do processamento da requisição.
+O servidor deve retornar um status adequado para cada situação. Para que possamos saber o que aconteceu.
+Exemplo: se o servidor realizou com sucesso, se houve algum erro, etc...
+O Status 201 - é retornado na resposta, esse status significa que o recurso foi criado com sucesso.
+Ou seja o recurso foi cadastrado com sucesso
+
+![img_30.png](img_30.png)
+Nesse exemplo a resposta informa que o conteúdo está no formato json. 
+
+![img_31.png](img_31.png)
+E o corpo da resposta é onde fica o conteúdo da resposta. Pode ter um corpo ou não.
+
+
+
+Corpo/Payload, não é obrigatório, e é nesse corpo que enviamos oa dados para API
+
+composição da resposta
+
+
+HTTP /[VERSAO][STATUS]
+[Cabeçalhos]
+
+[CORPO]
+
+
+-----------------------------
+HTTP/1.1 201 Created
+Location: /produtos/331
+content-Type: application/json
+{
+"cosdigo":331,
+"nome": "Notebook",
+"preco": 2100.00
+}
+
+status serve para descrever o resultado da requisição (201 created- um recurso foi criado com sucesso)
+corpo da resposta: é onde fica o conteudo da resposta
+
+
+## RECURSOS REST
+
+Um recurso é qualquer coisa exposta na web, é algo que tem importancia para ser refenciado no software. Exemplo: documento, pagina, video, foto,
+até mesmo um processo de negócio, em um ecommerce um produto pode ser considerado um recurso.
+
+Singleton Resource.Um recurso é uma instancia de uma determinada classe. Um recurso que significa uma unica coisa é chamado de singleton Resource.
+Os recusos podem ser agrupados em coleções(collection Resource)Coleção de Produtos é um recurso.
+
+## IDENTIFICANDO RECURSOS
+
+REST utiliza URI para identificar os Recursos, URI é uniforme Resource Identifier, identificador de recurso uniforme, nada mais é que um conjunto
+de caracteres  que tem como objetivo dar um endereço para os recursos de forma não ambigua.
+
+Quando modelamos um recurso temos que pensar em um tipo de URI para identifica-los.
+
+URI X URL: URL é um tipo de URI.
+
+Ex: /listasProdutos
+
+url Completa: httpd://api.algamarket.com.br/listasProdutos
+
+Não é uma boa pratica identificar uma URI dessa forma
+
+o corretos é : /produtos
+sem identificar ação
+
+RECURSO UNICO
+/produto/{codigo}
+
+url Completa: httpd://api.algamarket.com.br/produtos/331
+
+temos que usar o recurso sempre no plural, pois facilita o consumidor da API e quem desenvovle
+
+
 
 
 ## Flyway
