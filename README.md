@@ -782,6 +782,8 @@ TypedQuery<Cozinha> cozinhaTypedQuery=manager.createQuery("from cozinha", Cozinh
 
     }
 
+Para obter o resultado digitado em JPQL, podemos usar o seguinte método deEntityManager
+
 * essa String um JPQL -> linguagem de consulta do JPA, ele consulta em Objetos e não em tabelas
 * poderiamos colocar "select from cozinha" ele traria so o nome
 * Cozinha.class-> eu quero uma lista de Cozinha
@@ -836,12 +838,13 @@ em muitos lugares com pouca ou nenhuma alteração.
 Para podermos esconder usamos o lombok. Para que o código fique mais limpo.
 
 
-## Mapeamento relacionamento com @ManyToOne
+## Mapeamento relacionamento com @ManyToOne(muitos para um)
 
 
 Mapeamento relacionamento com @ManyToOne :Neste relacionamento, cada linha de uma entidade é referenciada a muitos 
 registros filho em outra entidade. O importante é que os registros de filhos não podem ter vários pais.
 
+    //anotação de muitos para um(muitos restaurantes possuem uma cozinha)
     @ManyToOne
     private Cozinha cozinha;
 
@@ -856,7 +859,35 @@ KEY `FK76grk4roudh659skcgbnanthi` (`cozinha_id`),
 CONSTRAINT `FK76grk4roudh659skcgbnanthi` FOREIGN KEY (`cozinha_id`) REFERENCES `cozinha` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
+CREATE TABLE `restaurante` (
+`id` bigint NOT NULL AUTO_INCREMENT,
+`nome` varchar(255) DEFAULT NULL,
+`taxa_frete` decimal(19,2) DEFAULT NULL,
+`cozinha_id` bigint DEFAULT NULL,
+PRIMARY KEY (`id`),
+KEY `FK76grk4roudh659skcgbnanthi` (`cozinha_id`),
+CONSTRAINT `FK76grk4roudh659skcgbnanthi` FOREIGN KEY (`cozinha_id`) REFERENCES `cozinha` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
+
+O motor InnoDB é o mais utilizado como padrão de engenharia da tabela 
+
+
+- isso só precisa ser feito se criar as entidades(tabelas) através das entidades , senão esta gerando as tabelas atarves
+das entidades não é necessário incluir essas anotações de nullable 
+
+Se você estiver trabalhando com banco de dados legado ou queira alterar o nome da coluna é necessário incluir a anotação
+@JoinColumn(name="cozinha_id")
+
+    @ManyToOne
+    @JoinColumn(name = "cozinha_id") //pra alterar o nome da coluna
+    private Cozinha cozinha;
+
+
+Para especificar que não aceita nulo é necessário incluir dentro da anotação @Colunn(nullable=false)
+
+    @Column(name = "taxa_frete", nullable = false)
+    private BigDecimal taxaFrete;
 
 
 ## Flyway
@@ -942,7 +973,7 @@ de objeto java para xml ou outros. -->
 ## TODO
 
 - Investigar ->https://javabydeveloper.com/org-hibernate-hql-internal-ast-querysyntaxexception-entity-table-is-not-mapped/
-O erro ocorreu devido eu ter incluido o nome da entidade diferente da tabela, foi uma letra, mas fez a diferença não gerando [ok]
+O erro ocorreu devido eu ter incluido o nome da entidade(entity) diferente da tabela, foi uma letra, mas fez a diferença não gerando [ok]
 		
 - Leitura: https://engsoftmoderna.info/artigos/ddd.html
 - Leitura: https://engsoftmoderna.info/

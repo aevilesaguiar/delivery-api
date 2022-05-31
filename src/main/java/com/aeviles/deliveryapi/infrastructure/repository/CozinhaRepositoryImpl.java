@@ -43,6 +43,7 @@ public class CozinhaRepositoryImpl implements CozinhaRepository {
 
     @Override
     public Cozinha findById(Long id) {
+
         return manager.find(Cozinha.class, id);
     }
 

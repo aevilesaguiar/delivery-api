@@ -3,7 +3,7 @@ package com.aeviles.deliveryapi.domain.model;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Objects;
+
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,7 +18,7 @@ public class Cozinha {
     @GeneratedValue(strategy = GenerationType.IDENTITY )
     private Long id;
 
-    @Column //(name = "nom_cozinha")
+    @Column( nullable = false)
     private String nome;
 
 

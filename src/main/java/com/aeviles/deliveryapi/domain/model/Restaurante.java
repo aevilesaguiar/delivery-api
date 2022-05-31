@@ -10,8 +10,8 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Entity
-@Table
+@Entity(name ="restaurante")
+@Table//(name ="restaurante")
 public class Restaurante {
 
 
@@ -20,13 +20,15 @@ public class Restaurante {
     @GeneratedValue(strategy = GenerationType.IDENTITY )
     private Long id;
 
+    @Column( nullable = false)
     private String nome;
 
-    @Column(name = "taxa_frete")
+    @Column(name = "taxa_frete", nullable = false)
     private BigDecimal taxaFrete;
 
     //anotação de muitos para um(muitos restaurantes possuem uma cozinha)
     @ManyToOne
+    @JoinColumn(name = "cozinha_id", nullable = false) //pra alterar o nome da coluna
     private Cozinha cozinha;
 
 
