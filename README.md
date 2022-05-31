@@ -836,6 +836,28 @@ em muitos lugares com pouca ou nenhuma alteração.
 Para podermos esconder usamos o lombok. Para que o código fique mais limpo.
 
 
+## Mapeamento relacionamento com @ManyToOne
+
+
+Mapeamento relacionamento com @ManyToOne :Neste relacionamento, cada linha de uma entidade é referenciada a muitos 
+registros filho em outra entidade. O importante é que os registros de filhos não podem ter vários pais.
+
+    @ManyToOne
+    private Cozinha cozinha;
+
+
+CREATE TABLE `restaurante` (
+`id` bigint NOT NULL AUTO_INCREMENT,
+`nome` varchar(255) DEFAULT NULL,
+`taxa_frete` decimal(19,2) DEFAULT NULL,
+`cozinha_id` bigint DEFAULT NULL,
+PRIMARY KEY (`id`),
+KEY `FK76grk4roudh659skcgbnanthi` (`cozinha_id`),
+CONSTRAINT `FK76grk4roudh659skcgbnanthi` FOREIGN KEY (`cozinha_id`) REFERENCES `cozinha` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+
+
 
 ## Flyway
 
