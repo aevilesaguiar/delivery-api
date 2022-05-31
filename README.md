@@ -726,11 +726,114 @@ eeé o hibernate que conversa com Driver JDBC.
 
 ## Diferença entre JPA E JDBC
 
-JPA é mais rapido no desenvolvimento, e menos trabalhoso. Já que no JDBC você usa SQL nativo para trabalhar diretamente com os registros, enquanto que no JPA você trabalha com objetos criados a partir desses registros, concluímos que a performance da primeira tecnologia é maior que a da segunda.
+JPA é mais rapido no desenvolvimento, e menos trabalhoso. Já que no JDBC você usa SQL nativo para trabalhar diretamente com 
+os registros, enquanto que no JPA você trabalha com objetos criados a partir desses registros, concluímos que a performance da 
+primeira tecnologia é maior que a da segunda.
 
-Diferença Hibernate e JPA
+## Observações BD
+
+- AI- AUTO INCREMENT: É quando eu quero deixar a responsabilidade para o próprio Banco de Dados incrementar o ID, sem ele 
+teremos que incluir manualmente.
+
+Configurando na Entity com a anotação @GeneratedValue(strategy = GeneratedType.IDENTITY), ou seja estratégia de geração de valor
+GeneratedType.IDENTITY -> quer dizer que eu estou passando a responsabilidade de gerar o valor de identificador, para o
+provedor de persistencia, ou seja o banco de dados. E quando startarmos novamente ele já inclui o autoincremente
+
+Para criar a massa de teste geralmente , criamos um arquivo  padrão chamado 'import.sql'  o qual possui alguns dados para
+fazermos nossos testes.
 
 
+- Existe uma interface em JPA chamada EntityManager , ela é responsável por gerenciar o contexto de persistencia, ele traduz os comandos,
+intermedia os comandos pelos SQLS; Com EntityManager conseguimos excluir, consultar, salavar no BD.
+-Todas as operações de busca ou de alteração vão nascer com a instância da classe EntityManager.
+
+@PersistenceContext - > aqui ele faz a injeção do EntityManager
+private EntityManager manager;
+
+![img_18.png](img_18.png)
+
+Existe um ciclo de vida das entidades JPA, que é mostrado no diagramaacima. 
+
+Estados de uma entidade:
+
+Uma entidade pode assumir alguns estados com relação ao EntityManager. Os estados podem ser:
+
+- Novo (new ou transient) ->O estado “novo” é o mais natural. É simplesmente quando construímos um objeto qualquer usando o operador new.
+- Gerenciado (managed) ->Para estar no estado “gerenciado”, ou seja uma instancia gerenciada pelo o JPA, quando ela está nesse
+estado de persistencia ela reflete no BD, podemos chamar os métodos persist, merge ou buscar a entidade usando o EntityManager.
+- Removido (removed) ->O estado “removido” é alcançado quando chamamos o método remove.
+- Desanexado (detached) ->Por último, uma entidade fica no estado “desanexado” quando é passada para o método detach.
+é um estado não gerenciado pelo oJPA.
+
+Para podermos remover uma instancia de cozinha, precisamos transformar o estado de Transient para o managed, senão não será possivel
+realizar a remoção.
+
+
+- Importante notar que entidades desanexadas podem voltar a ser gerenciadas com a chamada do método merge.
+
+
+Exemplo de uma consulta:
+
+public List<Cozinha> listar(){
+
+TypedQuery<Cozinha> cozinhaTypedQuery=manager.createQuery("from cozinha", Cozinha.class);
+
+    return cozinhaTypedQuery.getResultList();
+
+    }
+
+* essa String um JPQL -> linguagem de consulta do JPA, ele consulta em Objetos e não em tabelas
+* poderiamos colocar "select from cozinha" ele traria so o nome
+* Cozinha.class-> eu quero uma lista de Cozinha
+
+
+## DDD (Domain-Driven Design (DDD)
+
+Domain-Driven Design (DDD) é um conjunto de princípios para projeto de software, organizados e sistematizados em 2003,
+por Eric Evans, em um livro com o mesmo nome.
+
+Os princípios defendidos por DDD têm, no seu conjunto, um objetivo central: permitir o desenvolvimento de sistemas cujo
+design é centrado em conceitos próximos e alinhados com um domínio de negócio.
+
+O domínio de um sistema consiste da área e problema de negócio que ele pretende resolver.
+
+## Padrão Agregate do DDD
+
+* Padrão Agregate: é um grupo de objetos de domínio que pode ser tratado como uma unidade
+
+Exemplo: 
+
+![img_19.png](img_19.png)
+
+- o pacote(agregado) que agrupo Pedido , itemPedido e StatusPedido, sempre que for mexer
+num itemPedido temos que mexer no Pedido, existe uma consistencia entre eles.
+Podemos dizer que itemPedido é menos forte que Pedido, por isso Pedido é o AgregateRoot.
+Um agregado terá apenas um agregateRoot, qualquer referencia de fora do agregado, deve direcionar apenas para o agregateRoot,
+devemos evitar ter um relacionamento fora do agregateRoot
+
+O item Pedido está referenciando Produto, NÃO PODERIA referencias FotoProduto.
+
+![img_20.png](img_20.png)
+
+Usamos esses padrões para deixar a nossa aplicação mais consistente. 
+
+O AgregateRoot garante a integridade de todo o Agregado.
+
+## Padrão Repository do DDD
+
+O Repository é um padrão que adiciona uma camada  de abstração para acesso a dados. Ele imita uma Collection, de forma que 
+quem usa o repository, qual mecanismo de persistencia está sendo utilizado pelo o repository
+ 
+Essa interface não tem nenhum detalhe de mecanismo de persistencia. Chamamos esse repositorio de Repositorio Orientado a
+persistencia.
+
+
+## Código BoilerPlate
+
+Em programação de computadores, código boilerplate se refere a seções de código que devem ser incluídas 
+em muitos lugares com pouca ou nenhuma alteração.
+
+Para podermos esconder usamos o lombok. Para que o código fique mais limpo.
 
 
 
@@ -814,9 +917,14 @@ de objeto java para xml ou outros. -->
 		
 		
 		
+## TODO
+
+- Investigar ->https://javabydeveloper.com/org-hibernate-hql-internal-ast-querysyntaxexception-entity-table-is-not-mapped/
+O erro ocorreu devido eu ter incluido o nome da entidade diferente da tabela, foi uma letra, mas fez a diferença não gerando [ok]
 		
-		
-		
+- Leitura: https://engsoftmoderna.info/artigos/ddd.html
+- Leitura: https://engsoftmoderna.info/
+- Leitura: https://martinfowler.com/bliki/DDD_Aggregate.html
 		
 	
 ## Referencias
