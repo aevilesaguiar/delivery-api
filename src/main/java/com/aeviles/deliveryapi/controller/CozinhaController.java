@@ -4,6 +4,7 @@ package com.aeviles.deliveryapi.controller;
 import com.aeviles.deliveryapi.domain.model.Cozinha;
 import com.aeviles.deliveryapi.domain.model.CozinhaXmlWrapper;
 import com.aeviles.deliveryapi.domain.repository.CozinhaRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,13 +25,14 @@ public class CozinhaController {
         private CozinhaRepository cozinhaRepository;
 
         @GetMapping
-        public List<Cozinha>  findAll(){
-            return cozinhaRepository.findAll();
+        public List<Cozinha> findAll() {
+                return cozinhaRepository.findAll();
         }
 
 
-        @GetMapping(produces = MediaType.APPLICATION_XML_VALUE) //RESPONDER APENAS QUANDO O CONSUMIDOR PEDIR O FORMATO XML
-        public CozinhaXmlWrapper listarXml(){
+        @GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
+        //RESPONDER APENAS QUANDO O CONSUMIDOR PEDIR O FORMATO XML
+        public CozinhaXmlWrapper listarXml() {
 
                 //lista umn embrulho do do ObjetoWrapper
                 return new CozinhaXmlWrapper(cozinhaRepository.findAll());
@@ -41,7 +43,7 @@ public class CozinhaController {
 
                 Cozinha cozinha = cozinhaRepository.findById(cozinhaId);
 
-                if(cozinha != null){ //se a cozinha não está nulo, ou seja existe
+                if (cozinha != null) { //se a cozinha não está nulo, ou seja existe
 
                         return ResponseEntity.ok(cozinha);   //retorne a representação da cozinha
                 }
@@ -93,11 +95,36 @@ public class CozinhaController {
 
         @PostMapping //Mapeamento do método post http
         @ResponseStatus(HttpStatus.CREATED) // O recurso foi criado
-        public Cozinha adicionar (@RequestBody Cozinha cozinha){ //essa anotação @RequestBody diz que o parametro vai receber o corpo da requisição.Pega o corpo do JSON e vincula com a cozinha
-                 return cozinhaRepository.salvar(cozinha);
+        public Cozinha adicionar(@RequestBody Cozinha cozinha) { //essa anotação @RequestBody diz que o parametro vai receber o corpo da requisição.Pega o corpo do JSON e vincula com a cozinha
+                return cozinhaRepository.salvar(cozinha);
         }
 
+        @PutMapping("/{cozinhaId}")
+        public ResponseEntity<Cozinha> atualizar(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha) {
+                //cozinhaatual é a cozinha persistida no banco de dados  eu tenho que pegar cozinha e colocar dentro de cozinhaatual
+                Cozinha cozinhaatual = cozinhaRepository.findById(cozinhaId);
+
+                /*
+                //temos apenas um atributo, se tivemos mais , teriamos que fazer um a um.
+                cozinhaatual.setNome(cozinha.getNome());*/
+
+                if(cozinhaatual!=null){
+                        //outra forma de fazer usando BeanUtils
+                        BeanUtils.copyProperties(cozinha, cozinhaatual, "id"); //Usamos BeanUtils r passamos o copyProperties, passando a origem e o destino
+                        //ou seja copie os valores das propriedades de cozinha e coloque dentro de cozinha atual
+                        //ou seja ele vai pegar o set de cozinhaatual,pegando como valor o get de cozinha
+                        cozinhaRepository.salvar(cozinhaatual);
+
+                        return ResponseEntity.ok(cozinhaatual); //200 OK- Estas requisição foi bem sucedida. O significado do sucesso varia de acordo com o método HTTP:
+
+
+                }
+                return  ResponseEntity.notFound().build();
+
+
+                }
 
 
 }
+
 

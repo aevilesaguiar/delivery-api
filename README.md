@@ -1083,6 +1083,15 @@ Qual formato de representação devemos usar?
 
 é necessário analisador os consumidores de Api, geralmente se usa o json, mas pode ser utilizado outras formas
 
+## Negociando o media type do payload do POST com Content-Type
+
+Nós podemos negociar não só o produto que recebemos, mas também o que enviamos.
+
+O Accept é o que agente manda para o servidor dizendo para ele o que eu aceito como resposta.
+![img_54.png](img_54.png)
+O Content-type é o que eu estou te enviando, qual formato estou enviando.
+![img_53.png](img_53.png)
+
 
 ## Consultando uma coleção - Collection Resource
 
@@ -1447,6 +1456,7 @@ pois 204 quer dizer vazio mesmo, e no nosso caso não está vazio, nós temos um
 O correto é deixar o status 200.
 
 
+
 ## Modelando e implementando a inclusão de recursos POST
 
 Para incluir um recurso utilizamos - Modelagem abaixo:
@@ -1479,6 +1489,52 @@ O código de status é aplicado à resposta HTTP quando o método do manipulador
 
 Lembrando que post não é idempotente,pois  toda vez que fizermos um requisição com post teremos um efeito colateral no nosso servidor.
 
+## Modelando e implementando a atualização de recursos com PUT
+
+Atualizar uma cozinha : PUT faz atualização de resource
+
+PUT /cozinhas/{1}  HTTP/1.1
+Content-Type: application/json
+{
+"nome": "Argentina"
+}
+
+Endpoint para ATUALIZAR um recurso
+
+- cozinhaatual é a cozinha persistida no banco de dados  eu tenho que pegar cozinha e colocar dentro de cozinhaatual
+- Usamos BeanUtils e passamos o copyProperties, passando a origem e o destino, 
+- .copyProperties(cozinha, cozinhaatual, "id")-> ou seja copie os valores das propriedades de cozinha e coloque dentro de cozinha atual,
+ou seja ele vai pegar o set de cozinhaatual,pegando como valor o get de cozinha
+- será utilizado o status HTTP -200 OK- Estas requisição foi bem sucedida. O significado do sucesso varia de acordo com o método HTTP
+
+
+        @PutMapping("/{cozinhaId}")
+        public ResponseEntity<Cozinha> atualizar(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha) {
+ 
+                Cozinha cozinhaatual = cozinhaRepository.findById(cozinhaId);
+
+                        if(cozinhaatual!=null){
+                        //outra forma de fazer usando BeanUtils
+                        BeanUtils.copyProperties(cozinha, cozinhaatual, "id"); 
+                        
+                        cozinhaRepository.salvar(cozinhaatual);
+
+                        return ResponseEntity.ok(cozinhaatual); 
+
+
+                }
+                return  ResponseEntity.notFound().build();
+
+                }
+
+
+
+
+
+
+
+
+O PUT é idempotente por que requisições sequenciais não muda o estado resultante da primeira requisição.
 
 ## Representações para recursos
 
