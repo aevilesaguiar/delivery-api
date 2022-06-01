@@ -6,6 +6,7 @@ import com.aeviles.deliveryapi.domain.model.CozinhaXmlWrapper;
 import com.aeviles.deliveryapi.domain.repository.CozinhaRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 //Response: cozinhaRepository.findAll();
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController //essa anotação é um controlador e possui @Response body
 @RequestMapping("/cozinhas")//todas as requisições /cozinhas vai cair nessa requisição
@@ -99,8 +101,13 @@ public class CozinhaController {
                 return cozinhaRepository.salvar(cozinha);
         }
 
+        //Utilizaremos ResponseEntity por que precisaremos tratar a resposta http
         @PutMapping("/{cozinhaId}")
-        public ResponseEntity<Cozinha> atualizar(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha) {
+        public ResponseEntity<Cozinha> atualizar(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha) {//@PathVariable variavel de caminho
+                                                                                                             //@RequestBody por que queremos receber um corpo, que é a representação que queremos atualizar esse recurso
+                                                                                                                //@RequestBody agente está fazendo biding do corpo, o corpo que agente quer que seja atribuida a essa
+                                                                                                                //instancia que o spring vai criar de Cozinha e atribui as ptopriedades lá dentro
+
                 //cozinhaatual é a cozinha persistida no banco de dados  eu tenho que pegar cozinha e colocar dentro de cozinhaatual
                 Cozinha cozinhaatual = cozinhaRepository.findById(cozinhaId);
 
@@ -120,6 +127,28 @@ public class CozinhaController {
 
                 }
                 return  ResponseEntity.notFound().build();
+
+
+                }
+
+                //Utilizaremos ResponseEntity por que precisaremos tratar a resposta http e fazer alguma lógica
+                @DeleteMapping(path = "/{cozinhaId}")
+                public ResponseEntity<Cozinha> remover(@PathVariable Long cozinhaId) {//utilizaremos o @PathVariable para fazer o biding dele /{cozinhaId} nesse parametro cozinhaId do método
+                        try {
+                                Cozinha cozinha = cozinhaRepository.findById(cozinhaId);
+
+                                if (cozinha != null) {
+                                        cozinhaRepository.remover(cozinha);
+
+                                        return ResponseEntity.noContent().build();
+                                }
+
+                                return ResponseEntity.notFound().build();
+                        } catch (DataIntegrityViolationException e) {//quando o recurso não pode ser excluido
+                                return ResponseEntity.status(HttpStatus.CONFLICT).build(); //vou lançar a exceção 409 conflict , seria interessante lançar um corpo descrevendo qual foi o problema
+                                                                                        //tratamento de exceptions
+
+                        }
 
 
                 }

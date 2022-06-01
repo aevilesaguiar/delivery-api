@@ -1506,6 +1506,8 @@ Endpoint para ATUALIZAR um recurso
 - .copyProperties(cozinha, cozinhaatual, "id")-> ou seja copie os valores das propriedades de cozinha e coloque dentro de cozinha atual,
 ou seja ele vai pegar o set de cozinhaatual,pegando como valor o get de cozinha
 - será utilizado o status HTTP -200 OK- Estas requisição foi bem sucedida. O significado do sucesso varia de acordo com o método HTTP
+- Utilizaremos ResponseEntity por que precisaremos tratar a resposta http
+- @RequestBody por que queremos receber um corpo, que é a representação que queremos atualizar esse recurso
 
 
         @PutMapping("/{cozinhaId}")
@@ -1528,13 +1530,16 @@ ou seja ele vai pegar o set de cozinhaatual,pegando como valor o get de cozinha
                 }
 
 
-
-
-
-
-
-
 O PUT é idempotente por que requisições sequenciais não muda o estado resultante da primeira requisição.
+
+
+##  Modelando e implementando a exclusão de recursos com DELETE
+
+  DELETE /cozinhas/{id} HTTP/1.1 -> EXCLUI APENAS UMA COZINHA
+  DELETE /cozinhas/ HTTP/1.1 -> EXCLUI TODAS AS COZINHAS
+
+ O método DELETE é idempotente , depois que eu excluir um recursos as requisições, repetindo as mesmas  requsições várias vezes, ela não gera efeito colateral no estado do sistema, mesmo que gerar outros status
+
 
 ## Representações para recursos
 
