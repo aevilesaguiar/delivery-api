@@ -3,8 +3,9 @@
 ## Assuntos abordados:
 
 - Introdução[ok]
-- Spring e Injeção de dependencias
-- 
+- Spring e Injeção de dependencias[ok]
+- Introdução JPA e Hibernate[ok]
+- REST com spring
 
 
 # Introdução 
@@ -834,7 +835,7 @@ RESTful API é uma API desenvolvida em conformidade com as constraints, ou seja 
 O modelo arquitetural REST independe de linguagem e tecnologia, REST não restringe o uso de um protocolo em particular, apesar do modelo ser independente
 de protocolo, para colocar REST m prática é necessário o uso de um, e o mais usado é o protocolo http.
 
-COMO FUNCIONA O PROTOCOLO HTTP
+COMO FUNCIONA O PROTOCOLO HTTP: REQUISIÇÃO X RESPOSTA
 
 CLIENTE <=> |REQUISIÇÃO X RESPOSTA |<=> SERVIDOR
 
@@ -855,9 +856,10 @@ Método -> indica a ação que queremos que seja executado; (GET, POST, PUT, DEL
 - get: o metodo get solicita que seja devolvido nas repostas os dados que precisamos
 - post: o metodo post submete dados para o servidor, usamos muito para adicionar dados no BANCO DE DADOS
 
+**Composição de Requisição**
 
 URI-> caminho que identifica o que queremos dentro do servidor http. POST /produtos em palavras cadastrando produtos
-**Composição de Requisição**
+
 
 ![img_25.png](img_25.png)
 Apesar de existir a versão 2.0 do http a mais comum ainda é a 1.1 .
@@ -898,31 +900,39 @@ Nesse exemplo a resposta informa que o conteúdo está no formato json.
 ![img_31.png](img_31.png)
 E o corpo da resposta é onde fica o conteúdo da resposta. Pode ter um corpo ou não.
 
-
-
 Corpo/Payload, não é obrigatório, e é nesse corpo que enviamos oa dados para API
 
-composição da resposta
+composição da resposta.
+
+## Usando o protocolo http
+
+-> aplicativo que se conecta com o servidor : telnet
+Vou digitar no cmd-> telnet www.uol.com.br 80
+a porta padrão do http é a 80
+
+GET / HTTP/ 1.1
+Host: www.uol.com.br
+Accept: text/html
+
+-> client gnutls
+(GnuTLS é uma biblioteca de comunicações seguras que implementa os protocolos e tecnologias SSL, TLS e DTLS em torno deles.
+Ele fornece uma interface de programação de aplicativos (API) em linguagem C simples para acessar os protocolos de comunicação 
+seguros, bem como APIs para analisar e gravar X.509, PKCS #12 e outras estruturas necessárias.)
 
 
-HTTP /[VERSAO][STATUS]
-[Cabeçalhos]
-
-[CORPO]
+Podemos Clientes aos invês de usar esses servidores
 
 
------------------------------
-HTTP/1.1 201 Created
-Location: /produtos/331
-content-Type: application/json
-{
-"cosdigo":331,
-"nome": "Notebook",
-"preco": 2100.00
-}
+Eu posso utilizar o POSTMAN e não fazer manualmente .
 
-status serve para descrever o resultado da requisição (201 created- um recurso foi criado com sucesso)
-corpo da resposta: é onde fica o conteudo da resposta
+## POSTMAN
+
+Utilizamos o POSTMAN para organizar e testar as requisições da REST API.
+
+Uma das funcionalidades do POSTMAN é ser um client de uma RST API.
+
+eXEMPLOS DE OUTRAS FERRAMENTAS SEMELHANTES O postam: insomnia
+
 
 
 ## RECURSOS REST
@@ -935,16 +945,25 @@ Os recusos podem ser agrupados em coleções(collection Resource)Coleção de Pr
 
 ## IDENTIFICANDO RECURSOS
 
-REST utiliza URI para identificar os Recursos, URI é uniforme Resource Identifier, identificador de recurso uniforme, nada mais é que um conjunto
+REST usa URI para identificar os Recursos, URI é uniforme Resource Identifier, identificador de recurso uniforme, nada mais é que um conjunto
 de caracteres  que tem como objetivo dar um endereço para os recursos de forma não ambigua.
 
-Quando modelamos um recurso temos que pensar em um tipo de URI para identifica-los.
+Quando modelamos um recurso temos que pensar em um tipo de URI's para identifica-los.
 
 URI X URL: URL é um tipo de URI.
+URL: significa Uniforme resource Located (localizador de Recurso uniforme), é um tipo identificação de recurso também, mas 
+ela não identifica apenas o identificador mas também a localização do recurso. Onde o recurso está disponivel, e como faz
+para chegar até ele.
+
+Quando vemos urls como https://algumacoisa/cliente  -> nós estamos identificando um recurso e tambémcomo chegar até ele que 
+é através do protocolo http.
+
+Quando for falado de uri e url estamos falando da mesma coisa -> identificação de um recurso
+
 
 Ex: /listasProdutos
 
-url Completa: httpd://api.algamarket.com.br/listasProdutos
+url Completa: httpd://api.aligumacoisa.com.br/listasProdutos
 
 Não é uma boa pratica identificar uma URI dessa forma
 
@@ -954,12 +973,115 @@ sem identificar ação
 RECURSO UNICO
 /produto/{codigo}
 
-url Completa: httpd://api.algamarket.com.br/produtos/331
+
+url Completa: https://api.qualquercoisa.com.br/produto/331  ->errado: está no singular
+url Completa: https://api.qualquercoisa.com.br/produtos/331  ->certo: está no plural
+
 
 temos que usar o recurso sempre no plural, pois facilita o consumidor da API e quem desenvovle
+A uri deve ser um substantivo certo: /produtos   errado: /listasProdutos
+
+
+localhost é o endereço local da minha máquina localhost= 127.0.0.1
 
 
 
+
+## Controladores (controller)
+
+Controlador é uma classe responsável por receber requisições web, tratar essas requisições e devolver uma resposta
+
+
+import java.util.List;
+@ResponseBody //indica que a resposta do metodo listar deve ser enviada como resposta da requisição http
+@Controller   //Classe Controller
+@RestController //essa anotação é um controlador e possui @Response body
+@RequestMapping("/cozinhas")//todas as requisições /cozinhas vai cair nessa requisição
+
+se eu usar @RequestController não é necessário usar a requisição ResponseBody , pois a responseController já possui
+esse método.
+
+
+localhost:8080/cozinhas  -> uma coleção de recurso
+
+json: é uma  notação de transferencia de dados, ela é muito leve
+
+O que é JSON?
+Resultado de imagem para o que é json
+JSON é basicamente um formato leve de troca de informações/dados entre sistemas.É  uma formatação utilizada para 
+estruturar dados em formato de texto, e transmiti-los de um sistema para outro, como em aplicações cliente-servidor ou
+em aplicativos móveis  Mas JSON significa JavaScript Object Notation, ou seja, só posso usar com JavaScript correto?
+Na verdade não e alguns ainda caem nesta armadilha. O JSON além de ser um formato leve para troca de dados 
+é também muito simples de ler.
+
+A chave que abre e fecha significa um objeto {} ,
+dentro de objeto eu tenho propriedade que são definidas por chave e valor:
+"id"=chave
+1=valor
+
+separados por virgula
+
+O colchete significa que tenho uma lista []
+
+[
+{
+"id": 1,
+"nome": "Tailandesa"
+},
+{
+"id": 2,
+"nome": "Indiana"
+},
+{
+"id": 3,
+"nome": "Japonesa"
+}
+]
+
+## Representações de Recursos e Content Negotiation
+
+
+Recurso é qualquer coisa exposta na web como um documento, video ou produto ou qualquer outra entidade do sistema.
+Um recurso para ser alcançado precisa ser identificado por uma URI, precisamente precisamos de uma url para requisitar
+utilizando o protocolo HTTP. 
+
+Mas o que uma requisição feita em uma url de um recurso deve retornar? aí entra outro conceito importante:
+Representações de recursos
+
+O que é Representação de Recurso? é um código que descreve o estado atual do recurso
+
+![img_32.png](img_32.png)
+
+Essa imagem acima poderia ser a representação retornada no corpo de uma requisição feita para /produtos.
+Ou seja, o recurso identificado como /produtos é uma coleção e por isso a representação dessa coleção é uma listagem dos 
+produtos encontrados em um formato específico. Essa representação acima , está no formato json, que é a mais usada em REST API.
+
+Conceitualmente a  representação de um recurso(o que você está vendo acima,) não é o recurso , o recurso é o objeto, 
+A representação é a transformação desse objeto em um código, que seja possivel visualizar /ler informações do recursos.
+
+Podermos ter vários tipos de representação para um recurso, ou seja um recurso pode ser visualizado de diferentes formas.
+Quando o cliente da API faz uma requisição, ele pode especificar qual o formato consegue interpretar, ou seja consegue
+visualizar o formato que ele pode aceitar.
+
+![img_33.png](img_33.png)
+Essa requisição é adicionada no cabeçalho da requisição, com o nome Accept, o valor desse cabeçalho é um mídia type, ou seja
+é um tipo de mídia. Existem vários tipos de mídiatypes padronizados. O visualizado acima  é um application/json, e nesse 
+caso ele só aceita o formato json. é claro que cabe ao servidor aceitar ou não a requisição do cliente, se o cliente
+solicitar a requisição em formato json, e o servidor não tiver suporte a isso ele pode sisplesmente negar e retornar um erro.
+
+Outro formato muito utilizado é o xml.
+
+![img_34.png](img_34.png)
+O consumidor da API pode especificar um mídiatype aplicattion/xml no cabeçalho da requisição http, se o servidor suportar 
+esse midiaType uma resposta com a representação do recurso no formato xml é devolvida. 
+![img_35.png](img_35.png)
+Essa indicação de qual formato de representação de um mesmo recurso deve ser retornado é o que chamamos de Content Negotiation
+ou em portugês negociação de conteúdo.
+Por que o consumidor de certa forma está negociando com o servidor ele diz o que quer e o servidor pode aceitar ou não.
+
+Qual formato de representação devemos usar?
+
+é necessário analisador os consumidores de Api, geralmente se usa o json, mas pode ser utilizado outras formas
 
 ## Flyway
 
