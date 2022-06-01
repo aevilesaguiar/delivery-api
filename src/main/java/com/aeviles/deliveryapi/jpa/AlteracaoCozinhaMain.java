@@ -21,7 +21,7 @@ public class AlteracaoCozinhaMain {
 
 
 
-        cozinha= cadastroCozinha.adicionar(cozinha);
+        cozinha= cadastroCozinha.salvar(cozinha);
 
 
         System.out.printf("%d - %s\n",cozinha.getId(), cozinha.getNome());

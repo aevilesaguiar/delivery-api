@@ -4,19 +4,15 @@ package com.aeviles.deliveryapi.controller;
 import com.aeviles.deliveryapi.domain.model.Cozinha;
 import com.aeviles.deliveryapi.domain.model.CozinhaXmlWrapper;
 import com.aeviles.deliveryapi.domain.repository.CozinhaRepository;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 //GET /cozinhas HTTP/1.1
 //Response: cozinhaRepository.findAll();
 
-import java.awt.*;
 import java.util.List;
 
 @RestController //essa anotação é um controlador e possui @Response body
@@ -66,9 +62,6 @@ public class CozinhaController {
                 return cozinhaRepository.findById(id);
         }
 
-
-
-
          //ao invez de utilizar a Classe cozinha direto eu uso o ResponseEntity
         @GetMapping(value = "/{cozinhaId}")// Biding Path variable "cozinhaId" pode ter qualquer outro nome
         public ResponseEntity<Cozinha> findById(@PathVariable("cozinhaId") Long cozinhaId){ //PathVariable passamos o nome da nossa variavel que queremos fazer um biding
@@ -96,9 +89,15 @@ public class CozinhaController {
                         .status(HttpStatus.FOUND)
                         .headers(httpHeaders)
                         .build();}*/
+
+
+        @PostMapping //Mapeamento do método post http
+        @ResponseStatus(HttpStatus.CREATED) // O recurso foi criado
+        public Cozinha adicionar (@RequestBody Cozinha cozinha){ //essa anotação @RequestBody diz que o parametro vai receber o corpo da requisição.Pega o corpo do JSON e vincula com a cozinha
+                 return cozinhaRepository.salvar(cozinha);
         }
 
 
 
-
+}
 

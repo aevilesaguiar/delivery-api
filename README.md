@@ -1449,18 +1449,45 @@ O correto é deixar o status 200.
 
 ## Modelando e implementando a inclusão de recursos POST
 
-Para incluirmos recursos utilizamos o POST 
+Para incluir um recurso utilizamos - Modelagem abaixo:
+
+POST /cozinhas  HTTP/1.1
+Content-Type: application/json ( estou informando ao servidor que estou passando um corpo/payload dessa requisição no formato json)
+{
+"nome": "Brasileira",
+"descricao": "A tradiciona cozinha brasileira"
+}
+
+Ou seja vamos fazer um POST nesta coleção cozinhas.
+
+Essa anotação @RequestBody diz que o parametro vai receber o corpo da requisição.Pega o corpo do JSON e vincula com a cozinha
+
+Endpoint para adicionar um novo recurso
+201 Created : A requisição foi bem sucedida e um novo recurso foi criado como resultado. Esta é uma tipica resposta enviada após uma requisição POST.
+
+        @PostMapping //Mapeamento do método post http
+        @ResponseStatus(HttpStatus.CREATED)
+        public void adicionar (@RequestBody Cozinha cozinha){
+        cozinhaRepository.salvar(cozinha);
+        }
+
+@ResponseStatus : marca um método ou classe de exceção com o código de status e a mensagem de razão que deve ser retornada. 
+O código de status é aplicado à resposta HTTP quando o método do manipulador é invocado ou sempre que a exceção especificada 
+é lançada. Ele substitui as informações de status definidas por outros meios, como ResponseEntityou redirect:.
+
+![img_52.png](img_52.png)
+
+Lembrando que post não é idempotente,pois  toda vez que fizermos um requisição com post teremos um efeito colateral no nosso servidor.
 
 
 ## Representações para recursos
 
-Hoje utilizamos com mais frequencia o json, mais pode ser alterado pelo o consumidor da APIatravés do cabeçalho accept na
+Hoje utilizamos com mais frequencia o json, mais pode ser alterado pelo o consumidor da API através do cabeçalho accept na
 requisição.
 
 Headers (cabeçalhos http): é nesse campo que espedivifamos os cabeçalhos customizados;
 
 - Accept (cabeçalho padrão, que nós consumidores da Api aceitamos como respostas): application/json(application media type)
-
 
 - Negociação de Conteúdo(Content Negotiation) posso escolher o formato que preciso
 

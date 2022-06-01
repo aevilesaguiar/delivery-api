@@ -32,7 +32,7 @@ public class CozinhaRepositoryImpl implements CozinhaRepository {
 
     @Override
     @Transactional//quando eu anoto um método com transactional esse método vai ser executado dentro de uma transação
-    public Cozinha adicionar(Cozinha cozinha) {
+    public Cozinha salvar(Cozinha cozinha) {
         //insert into cozinha (nome) values
         //merge fundir, incluir a entidade cozinha dentro do contexto de persistencia
         //o metodo merge não altera a instancia que está passando como parametro
