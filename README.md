@@ -1083,6 +1083,108 @@ Qual formato de representação devemos usar?
 
 é necessário analisador os consumidores de Api, geralmente se usa o json, mas pode ser utilizado outras formas
 
+
+## Consultando uma coleção - Collection Resource
+
+localhost:8080/cozinhas
+
+O colchete significa que tenho uma lista []
+Com 4 objetos
+
+[
+{
+"id": 1,
+"name": "Acre"
+},
+{
+"id": 2,
+"name": "Alagoas"
+},
+{
+"id": 3,
+"name": "Amapá"
+},
+{
+"id": 4,
+"name": "Amazonas"
+}
+]
+
+## Consultando Singleton Resource com Get e @PathVariable
+
+Quando eu quero uma cozinha especifica.
+
+
+
+  /{cozinhaId}")->Path variable "cozinhaId" pode ter qualquer outro nome
+
+(@PathVariable("cozinhaId") Long id)->na anotação @PathVariable passamos o nome da nossa variavel que queremos fazer um biding
+
+Posso descrever o método findById no controller dessa forma:
+
+        @GetMapping(value = "/{cozinhaId}")
+        public Cozinha findId(@PathVariable("cozinhaId") Long id){ 
+                return cozinhaRepository.findById(id);
+        }
+
+E também dessa forma:
+
+        @GetMapping(value = "/{cozinhaId}")
+        public Cozinha findId(@PathVariable Long cozinhaId){ 
+                return cozinhaRepository.findById(cozinhaId);
+        }
+dessa forma ele faz o biding automaticamente, quando incluímos o nome do path no parametro
+
+localhost:8080/cozinhas/1 ->  /cozinhas//{cozinhaId}
+
+- Estou retornando apenas uma cozinha, então abre e fecha chaves é 1 unico objeto json
+{
+"id": 1,
+"nome": "Tailandesa"
+}
+
+
+## Customizando as representações XML e JSON com @JsonIgnore, @JsonProperty e @JsonRootName
+
+Qualquer classe que esteja dentro do pacote domain-model representa um modelo de domínio, ou seja é uma classe de negócios
+que representa as entidades da nossa aplicação.
+
+Jackson é uma biblioteca que usamos para fazer serialização e desserialização, para gerar as representações dos recursos
+de acordo com o formato que quisermos.
+
+Exemplo de representação:
+
+    @JsonProperty(value = "titulo")
+    @Column( nullable = false)
+    private String nome;
+
+ao invés desse que utiliza o nome do atributo:
+
+![img_36.png](img_36.png)
+
+Com a utilização da anotação  @JsonProperty(value = "titulo")
+
+![img_37.png](img_37.png)
+
+Quando não queremos  devolver/aparecer na apresentação desse recurso. a propriedade é @JsonIgnore, ela ignora a propriedade quando
+for serializar/gerar a representação
+
+    @JsonIgnore
+    @Column( nullable = false)
+    private String nome;
+
+![img_38.png](img_38.png)
+
+@JsonRootName("gastronomia") -> customiza os nomes, só funciona no xml
+
+
+![img_39.png](img_39.png)
+
+
+- Customizar o formato xml
+
+
+
 ## Flyway
 
 O Flyway é um framework que permite o versionamento e gerenciamento do Banco de dados, com ele podemos controlar a
@@ -1102,30 +1204,252 @@ segue uma convenção para o nome dos Scripts, que é V{numero da versão}__<nom
 adicionados dentro do diretório sql(são dois underscore após o numero da versão).
 
 
-
 ## Metodos http /Verbos http
 
-Métodos http também conhecido como verbos http. Através dos métodos http nós dizemos para o servidor qual
-tipo de serviço nós devemos executar em um determinado recurso indentificado pela URI.
+Métodos http também conhecido como verbos http.Toda requisição é obrigatorio ter um método HTTP.E um método possui a 
+semantica da operação a ser efetuada sobre determinado recurso.  Através dos métodos http nós dizemos para o servidor qual o
+tipo de serviço nós devemos executar em um determinado recurso indentificado pela URI. Pode ser recuperar dados, cadastrar,
+excluir, modificar e etc...
+
 
 Método GET : é usado quando existe a necessidade de obter a representação  de um recurso. O GET não gera efeito
 colateral, não tem alteração no estado sa aplicação. O GET não é usado para mudar um recurso, por isso ele 
 é chamado idempotente.
 
-Idempotente: significa que requisições repetidas na sequencia não geram efeito colateral;
+Idempotente/idempotencia: significa que requisições repetidas na sequencia não geram efeito colateral; ou seja tem a capacidade de poder
+ser aplicada mais de uma vez, sem que o resultado da primeira vez seja alterado.
 
 
-## Códigos de Status
+## Principais métodos HTTP
 
- Mais conhecidos:
+- GET : Esse método é usado quando existe a necessidade de obter a representação de um recurso, seja um singleton resource ou 
+uma collection resource.
 
-- 200 - ok (Esse tipo de código indica que a solicitação foi bem-sucedida. A carga útil enviada em uma reação 200 depende da técnica de solicitação. Para os sistemas)
-- 201 - created(A solicitação foi atendida e trouxe pelo menos um novo recurso sendo feito. O recurso essencial feito pelo pedido é reconhecido)
-- 204 - no content (O servidor satisfez efetivamente a solicitação e que não há conteúdo extra para enviar no corpo da carga de reação. Metadados na reação)
-- 400 - Bad Reques
-- 401 - Unauthorized
-- 404 - Not Found
-- 500 - Internal Server Error(um erro que o servidor não consegue tratar)
+Se executarmos esse mesmo get várias vezes no mesmo recurso o resultado será o mesmo da requisição inicial, porque não gera
+efeito colateral. O GET não pode ser utilizado para mudar o recurso, por isso o GET é um método seguro. Quando um método não gera efeito 
+colateral nem altera um recurso ele é um método seguro, em ingês "safe metod", e também é um método idempotente.
+
+![img_40.png](img_40.png)
+
+- POST : O método POST é utilizado para criar um novo recurso, dentro de uma coleção de recursos. Por exemplo para criar 
+uma nova cozinha, nós podemos fazer uma requisição com POST em /cozinhas, diferente do método GET, no POST nós enviamos um corpo
+na requisição com um payload, ou seja os dados que nós queremos submeter para o servidor criar um novo recurso. 
+Se fizermos essa mesma requisição POST no mesmo recurso nós teremos um efeito colateral. Vários recursos serão criados.
+Por isso POST não é idempotente e nem seguro(lembrando que um método seguro é aquele que não modifica recursos)
+
+![img_41.png](img_41.png)
+
+- PUT : método PUT é usado geralmente como forma para atualizar determinado recurso. Para atualizar os dados de uma cozinha
+por exemplo nós fazemos um PUT com cozinhas seguido pelo o codigo->  /cozinhas/11 . E enviamos no corpo da requisição os
+dados que precisam ser atualizados. Note que o PUT deve atualizar não só os dados informados no corpo da requisição, ele
+deve atualizar o recurso completo, não pode ser utilizado para uma atualização parcial. Por exemplo se um recurso tem dois
+atributos, e foi passado apenas um atributo para atualizar, temos que atualizar o recurso completo, então o atributo que
+não foi pasado será considerado como vazio ou nulo na atualização. Conceitualmente PUT pod ser utilizado também para 
+criar novos recursos, não é muito utilizado. No exemplo abaixo, ele irá atualizar e não criar id. O PUT é considerado um
+método não seguro, porque modifica os dados do recurso e também ele é considerado idempotente, ele é idempotente porque
+mesmo que você execute várias vezes o PUT em um mesmo recurso o resultado é sempre o mesmo da requisição inical,
+
+![img_42.png](img_42.png)
+
+
+- PATCH : outro método menos utilizado é o PATCH ele serve para atualizar um recurso parcialmente, por exemplo imagine que temos um 
+recurso na uri /produtos/3  e esse recurso tem vários atributos, mas nós queremos atualizar só o preço, podemos fazer um PATCH
+nessa URI e no corpo da requisição passar só o novo preço, dessa forma os produtos permanecem inalteraveis e modificamos
+apenas o que foi informado, nesse caso o preço.
+
+![img_43.png](img_43.png)
+
+A implementação do metodo PATCH  é mais complexa do que fazer um PUT, porque temos que tratar os atributos  de forma isolada,
+validar so que foram informados, ignorar os demais.
+
+Patch não é um método seguro e é idempotente.
+
+- DELETE: O método delete tem como finalidade a remoção de um determinado recurso. Não passamos nem recebemos um corpo na
+requisição. Ele é um método não seguro e idempotente(isso é questionável), mas devemos pensar no efeito colateral do estado da aplicação.
+Se executarmos a exclusão duas vezes de um mesmo recurso, a primeira chamada vai realmente excluir, a segunda chamada não vai excluir,
+mas não altera em nada o estado da aplicação, por isso consideramos idempotente, ou seja o estado da aplicação continua o mesmo 
+a partir da segunda requisição.
+
+![img_44.png](img_44.png)
+
+- HEAD : o método HEAD é igual ao GET com uma exceção, ele nunca retorna um corpo na resposta, ele é usado apenas para
+buscar um cabeçalho. As vezes o consumidor da API, não está interessado no corpo da resposta. Por exemplo para testar:
+se uma URI existe mesmo, se um midiaType é aceito e etc.
+
+![img_45.png](img_45.png)
+
+
+- OPTIONS : o metodo OPTIONS não tem nenhuma relação com criar, alterar, modificar ou excluir recursos. O OPTION é utilizado
+para solicitar uma lista de métodos suportados por um recurso. Nós não implementamos todos os métodos em um mesmo recurso, por
+o OPTIONS é util para o cliente consultar quais são os métodos disponíveis.
+
+![img_46.png](img_46.png)
+
+
+## Códigos de Status HTTP
+
+Uma REST API é desenvolvida para ser usada pelos consumidores.Por isso quando estamos modelando uma API nós temos que pensar
+sempre na experiencia de uso do consumidor da API. É importante que sejam criadas APIS fáceis de serem consumidas, onde o
+desenvolvedor possa usá-la sabendo exatamente o que esperar.
+
+Uma das coisas que devemos pensar para deixar a API padronizada é o codigo de Status HTTP que você deve retornar para
+uma requisição. Desenvolvedores e consumidores de API devem conhecer os Status HTTP de forma que ninguém tenha que aprender 
+isso novamente para cada API que vai desenvolver ou que vai consumir.
+
+-Relembrando:
+
+![img_47.png](img_47.png)
+
+Uma resposta obrigatoriamente possui um status HTTP, cada código significa uma coisa, ou seja um tipo de resultado da requisição
+feita, por exemplo se uma requisição foi bem sucedida a API deve retornar um código, senão foi bem sucedida deve retornar um
+outro código. Existe uma lista padronizada de protocolos HTTP : iana.org -> https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml#http-status-codes-1
+
+Os códigos de Status HTTP são agrupados em níveis: 
+
+* Nível 200(qualquer código de status entre 200 a 299) :esse nível indica que a requisição foi bem sucedida.
+Não houve nenhum problema na execução. Dentro desse nível especifico existe códigos que especificam alguma coisas.
+Mas todos significam Sucesso.
+
+- 200 - ok :padrão para requisições executadas com sucesso
+- 201 - created  :significa que a requisição foi atendida e foi criado um novo recurso com sucesso. Isso é muito utilizado
+para quando fazemos a inclusão de um novo recurso e essa inclusão é feita com sucesso, aí a resposta vem com o código 201.
+- 204 - no content(sem conteudo): sigifica que o servidor  processou a requisição com sucesso, e não está retornando nenhum 
+conteúdo no corpo da resposta, é muito usado por exemplo quando pedimos a exclusão de um recurso e isso é feito com sucesso.
+O servidor não retorna a representação do recurso nesse caso. Por isso só informar o status 204 é suficiente para saber
+que a exclusão foi feita.
+
+* Nível 300(qualquer código de status entre 300 a 399) :esse nível indica status de redirecionamento
+ 
+- 301 :Moved Permanently(movido permanentemente) , o código 301 diz que a requisição e todas as futuras evem ser redirecionadas para
+um endereço fornecido no cabeçalho da resposta, ou seja um redirect permanente. Quando esse status é retornado um cabeçalho 
+com o nome location deve existir na resposta informando a URI para onde o recurso foi movido.
+- 302:Found(Encontrado), esse código 302 significa  que o endereço do recurso existe, mas foi alterado temporariamente.
+É necessário adicionar um cabeçalho location também quando usar o código 302. Como um redirecionamente pode ser alterado no futuro
+já que ele é temporário, o consumidor da API não deve entender essa mudança como definitiva , por isso ele pode continuar 
+usando a URI original para requisições futuras.
+
+
+* Nível 400(qualquer código de status entre 400 a 499) :esse nível indica algum erro por parte do consumidor da API, ou seja
+em quem criou a requisição, quando o servidor recebe uma requisição ele tem a chance antes de executar o que foi solicitado
+e de verificar se todas as informações da requisição estão corretas, coerentes e se o cliente realmente tem permissão de solicitar 
+o que está pedindo. Caso tenha algo errado o servidor responde com o Status de Nível 400.
+
+- 400 - Bad Request( Requisição mal feita): o código 400 significa que o servidor não pode processar a requisição porque ele não conseguiu
+entender a mensagem, ou por que ele percebeu outro erro por parte do cliente, pode ser algum erro de sintaxe, ou erro de
+validação.
+- 401 - Unauthorized(não autorizado): o código 401 indica que a requisição não será executada por que requer que o cliente seja 
+autenticado.
+- 403 - Forbidden(Proibido): o código 403 indica que o servidor entendeu a requisição, mas se recusou a executá-la porque o cliente 
+não está autorizado.
+- 404 - Not Found(Não encontrado): o código 404 significa que o recurso não existe.
+- 405 - Method Not Allowed(Método não permitido) : o código 404 significa que o verbo http usado na requisição não é suportado
+pelo o recurso,. Por exemplo se a requisição usou um verbo DELETE mas o recurso não pode ser excluido, esse status 405 é retornado
+- 406 - Not Acceptable(não aceito):o código 406 diz que o servidor não pode retornar a representção  do recurso usando mídiaType informada no
+cabeçalho accept da requisição.  Se o mídiaType não é suportado pelo o servidor , esse é o código de status que receberemos.
+Um exemplo se incluirmos application/xml , mas o servidor só suporta application/json, esse é o código que ele deve retornar
+
+* Nível 500(qualquer código de status entre 500 a 599) :esse nível 500 indica erro no servidor. Esse é o tipo de erro que 
+não queremos que aconteça por que provavelemente a responsabilidade é nossa em corrigir o erro. Geralmente indica algum 
+problema no nosso código ou com servidores.
+
+- 500 - Internal Server Error(Erro interno no servidor que ele não sabe tratar): é muito comum esse erro acontecer quando
+o desenvolvedor  erra no tratamento de exceptions. por exemplo se você deixar uma NullPointerException ser lançada o status 
+correto para retornar o cliente é 500
+- 503 Service Unavailable(serviço indisponivel):indica que o servidor não pode responder requisições por que ele está em manutenção
+ou está sobrecarregado.
+
+É muito importante usar os códigos de Status de maneira CORRETA.
+
+Quantos códigos de status HTTP uma API deve usar? contando com os status que o próprio framework já retorna sem precisarmos
+implementar em nosso código, eu diria que a API geralmente vai usar entre 10 e 20 códigos. Mas não existe uma quantidade certa.
+
+
+Por padrão quando fazemos uma requisição e ela é executada com sucesso o spring retorna para nós o status http 200. 
+Isso significa ok -bem sucedido. E esse é um padrão de resposta do Spring, e nós podemos alterá-los.
+![img_48.png](img_48.png)
+
+Nós apenas utilizamos a anotação @ResponseStatus em cima do método que queremos alterar O CÓDIGO HTTP .
+Exemplo:
+
+@ResponseStatus(HttpStatus.OK)  <-
+@GetMapping(value = "/{cozinhaId}")
+public Cozinha findId(@PathVariable("cozinhaId") Long id){
+                return cozinhaRepository.findById(id);
+}
+
+## ResponseEntity
+
+- Antes : Cozinha está sendo usada como modelo de representação do recurso, ou seja retornando um objeto do tipo Cozinha
+o Jackson que faz a transformação do objeto em json, xml ou outros... ele vai transformar o objeto java em json, ou seja
+vai serializar ele em json ou xml dependendo do formato que especificarmos no headerAccept. Vimos que podemos alterar o status
+http usando a anotação @ResponseStatus(HttpStatus.OK), mas também podemos ter um controle maior da resposta HTTP, por exemplo
+adicionar novos headers e inclusive mudar o status http de uma forma mais programática. Como veremos com o uso de ResponseEntity
+
+       @ResponseStatus(HttpStatus.OK)  
+        @GetMapping(value = "/{cozinhaId}")//Path variable "cozinhaId" pode ter qualquer outro nome
+        public Cozinha findId(@PathVariable("cozinhaId") Long id){ //PathVariable passamos o nome da nossa variavel que queremos fazer um biding
+
+                //um print para verificar o erro
+                System.out.println("TIPO DE VARIAVEL"+id);
+                return cozinhaRepository.findById(id);
+        }
+
+- Apos a inclusão de ResponseEntity:  Ao invés de retornarmos uma instancia de Cozinha como mostrado acima, vamos retornar 
+uma instancia de ResponseEntity, ele representa uma resposta HTTP onde pode ter inclusive uma instancia de Cozinha no respnseEntity.
+ResponseEntity<T> = ResponseEntity<Cozinha> ou seja tipamos ele.
+
+
+
+ResponseEntity: Usando Spring ResponseEntity para manipular a resposta HTTP. ResponseEntity representa toda a resposta 
+HTTP: código de status, cabeçalhos e corpo . Como resultado, podemos usá-lo para configurar totalmente a resposta HTTP.
+Se quisermos usá-lo, temos que devolvê-lo do endpoint; O spring cuida do resto.ResponseEntity é um tipo genérico. 
+Consequentemente, podemos usar qualquer tipo como o corpo da resposta:
+
+Ex:
+@GetMapping("/hello")
+ResponseEntity<String> hello() {
+return new ResponseEntity<>("Hello World!", HttpStatus.OK);
+}
+
+Response Entity permite que possamos customizar a resposta HTTP.
+
+
+
+        @GetMapping(value = "/{cozinhaId}")// Biding Path variable "cozinhaId" pode ter qualquer outro nome
+        public ResponseEntity<Cozinha> findById(@PathVariable("cozinhaId") Long cozinhaId){ //PathVariable passamos o nome da nossa variavel que queremos fazer um biding
+
+                Cozinha cozinha=cozinhaRepository.findById(cozinhaId);
+
+                //um print para verificar o erro
+                System.out.println("TIPO DE VARIAVEL"+cozinhaId);
+                return ResponseEntity.status(HttpStatus.OK).body(cozinha); //se eu não coloco o body ele não me retorna um payload na volta, ou seja um corpo
+
+                //se eu não quiser um corpo
+               // return ResponseEntity.status(HttpStatus.OK).build(); //build constroi um response entity
+
+
+        }
+
+* Sem o corpo 
+![img_49.png](img_49.png)
+* Com o corpo
+![img_50.png](img_50.png)
+
+
+- Outras possibilidades- conseguimos customizar não só o status, mas também o header da resposta
+
+![img_51.png](img_51.png)
+
+OBS: Quando por exemplo tivermos uma collection resources localhost:8080/cozinhas, quando fazemos uma requisição
+e eu não tenho cozinhas no meu banco , e recebo um array vazio (uma lista vazia)->[], e retorna um ststus HTTP 200, 
+sendo que a lista está vazia. A boa prática não é retornar 404. Um outro mal uso é usar o código 204 -no content,
+pois 204 quer dizer vazio mesmo, e no nosso caso não está vazio, nós temos uma lista que não tem nada dentro dela.
+O correto é deixar o status 200.
+
+
+## Modelando e implementando a inclusão de recursos POST
+
+Para incluirmos recursos utilizamos o POST 
 
 
 ## Representações para recursos
