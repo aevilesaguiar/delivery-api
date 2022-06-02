@@ -1574,7 +1574,32 @@ de objeto java para xml ou outros. -->
 		</dependency>
 		
 		
-		
+## Implementando a camada de domain services (e a importância da linguagem ubíqua)
+
+No DDD existe um conceito chamado domain Service ou serviço de dominio.
+
+Um domain Service é uma operação sem estado que realiza uma tarefa especifica do dominio, ou seja uma tarefa de negócios.
+Quando um processo num domínio não é uma responsabilidade natural de uma entidade agente cria um serviço de dominio.
+
+Por exemplo se eu quero salvar uma cozinha, eu estou dando acesso direto ao controller a ter acesso direto ao repositorio.
+Não é interessante para o controller ter acesso a operações que fazem modificações direto na aplicação. como salvar,
+excluir, mudar alguma propriedade  sendo que isso será persistido no nosso Bancod e dados.
+
+Não tem problema o nosso repositorio ter acesso a fazer consultas, porém para fazer modificações no estado da aplicação,
+o ideal é que se crie outra classe para fazer isso, e o controlador use essa classe.
+
+A linguagem comum (ex devs e negocios) no DDD é chamada de linguagem ubiqua, a mesma falada por pessoas de negócios
+
+
+OBS:
+O serialVersionUIDé um identificador de versão universal para uma Serializableclasse. A desserialização usa esse número 
+para garantir que uma classe carregada corresponda exatamente a um objeto serializado. Se nenhuma correspondência for 
+encontrada, um InvalidClassExceptionserá lançado.
+serialVersionUID é usado para garantir que a mesma classe seja carregada durante a desserialização (que foi usada para o
+processo de serialização). Funciona como um controle de versão em uma classe Serializable.
+
+
+
 ## TODO
 
 - Investigar ->https://javabydeveloper.com/org-hibernate-hql-internal-ast-querysyntaxexception-entity-table-is-not-mapped/

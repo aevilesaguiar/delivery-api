@@ -38,8 +38,10 @@ public class CidadeRepositoryImpl implements CidadeRepository {
 
     @Override
     @Transactional
-    public void remover(Cidade cidade) {
-        cidade = findById(cidade.getId());
+    public void remover(Long id) {
+      Cidade  cidade = findById(id);
         manager.remove(cidade);
+
     }
+
 }

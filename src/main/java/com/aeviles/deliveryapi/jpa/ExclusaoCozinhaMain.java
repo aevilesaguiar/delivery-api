@@ -17,9 +17,9 @@ public class ExclusaoCozinhaMain {
 
         CozinhaRepository cadastroCozinha = applicationContext.getBean(CozinhaRepository.class);
 
-      Cozinha cozinha = new Cozinha();
-      cozinha.setId(1L);
-      cadastroCozinha.remover(cozinha);
+   //  Cozinha cozinha = new Cozinha();
+    //  cozinha.setId(1L);
+     // cadastroCozinha.remover(cozinha);
 
 
 

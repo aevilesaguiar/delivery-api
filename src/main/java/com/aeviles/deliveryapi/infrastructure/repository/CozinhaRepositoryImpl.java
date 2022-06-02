@@ -2,6 +2,7 @@ package com.aeviles.deliveryapi.infrastructure.repository;
 
 import com.aeviles.deliveryapi.domain.model.Cozinha;
 import com.aeviles.deliveryapi.domain.repository.CozinhaRepository;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,8 +50,14 @@ public class CozinhaRepositoryImpl implements CozinhaRepository {
 
     @Override
     @Transactional //para ele ser executado dentro de uma transação
-    public void remover(Cozinha cozinha) {
-        cozinha = findById(cozinha.getId()); //isso é um find
+    public void remover(Long id) {
+      Cozinha  cozinha = findById(id); //isso é um find
+
+        if(cozinha==null){//se cozinha não existir eu lanço uma exceção
+            throw  new EmptyResultDataAccessException(1);//eu espera que tivesse pelo o menos uma cozinha, senão existir eu lanço uma exceção, se exisitir eu removo
+        }
+
+
         manager.remove(cozinha);
 
     }

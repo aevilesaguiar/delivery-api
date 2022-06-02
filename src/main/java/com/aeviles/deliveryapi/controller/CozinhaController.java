@@ -1,9 +1,12 @@
 package com.aeviles.deliveryapi.controller;
 
 
+import com.aeviles.deliveryapi.domain.exception.EntidadeEmUsoException;
+import com.aeviles.deliveryapi.domain.exception.EntidadeNaoEncontradaException;
 import com.aeviles.deliveryapi.domain.model.Cozinha;
 import com.aeviles.deliveryapi.domain.model.CozinhaXmlWrapper;
 import com.aeviles.deliveryapi.domain.repository.CozinhaRepository;
+import com.aeviles.deliveryapi.domain.service.CozinhaService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -11,12 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-//GET /cozinhas HTTP/1.1
-//Response: cozinhaRepository.findAll();
-
 import java.util.List;
-import java.util.Optional;
+
 
 @RestController //essa anotação é um controlador e possui @Response body
 @RequestMapping("/cozinhas")//todas as requisições /cozinhas vai cair nessa requisição
@@ -25,6 +24,9 @@ public class CozinhaController {
 
         @Autowired
         private CozinhaRepository cozinhaRepository;
+
+        @Autowired
+        private CozinhaService cozinhaService;
 
         @GetMapping
         public List<Cozinha> findAll() {
@@ -95,10 +97,11 @@ public class CozinhaController {
                         .build();}*/
 
 
+        //metodo salvar/adicionar
         @PostMapping //Mapeamento do método post http
         @ResponseStatus(HttpStatus.CREATED) // O recurso foi criado
-        public Cozinha adicionar(@RequestBody Cozinha cozinha) { //essa anotação @RequestBody diz que o parametro vai receber o corpo da requisição.Pega o corpo do JSON e vincula com a cozinha
-                return cozinhaRepository.salvar(cozinha);
+        public Cozinha salvar(@RequestBody Cozinha cozinha) { //essa anotação @RequestBody diz que o parametro vai receber o corpo da requisição.Pega o corpo do JSON e vincula com a cozinha
+                return cozinhaService.salvar(cozinha);
         }
 
         //Utilizaremos ResponseEntity por que precisaremos tratar a resposta http
@@ -135,16 +138,18 @@ public class CozinhaController {
                 @DeleteMapping(path = "/{cozinhaId}")
                 public ResponseEntity<Cozinha> remover(@PathVariable Long cozinhaId) {//utilizaremos o @PathVariable para fazer o biding dele /{cozinhaId} nesse parametro cozinhaId do método
                         try {
-                                Cozinha cozinha = cozinhaRepository.findById(cozinhaId);
+                                cozinhaService.excluir(cozinhaId);
 
-                                if (cozinha != null) {
-                                        cozinhaRepository.remover(cozinha);
+                                return ResponseEntity.noContent().build();
+                        }
 
-                                        return ResponseEntity.noContent().build();
-                                }
-
+                        //entidade não foi encontrada?
+                        catch (EntidadeNaoEncontradaException e){
                                 return ResponseEntity.notFound().build();
-                        } catch (DataIntegrityViolationException e) {//quando o recurso não pode ser excluido
+                        }
+
+                        //entidade esta em uso?
+                        catch (EntidadeEmUsoException e) {//quando o recurso não pode ser excluido
                                 return ResponseEntity.status(HttpStatus.CONFLICT).build(); //vou lançar a exceção 409 conflict , seria interessante lançar um corpo descrevendo qual foi o problema
                                                                                         //tratamento de exceptions
 
