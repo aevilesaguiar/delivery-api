@@ -29,7 +29,7 @@ public class RestauranteRepositoryImpl implements RestauranteRepository {
 
     @Override
     @Transactional//quando eu anoto um método com transactional esse método vai ser executado dentro de uma transação
-    public Restaurante adicionar(Restaurante restaurante) {
+    public Restaurante salvar(Restaurante restaurante) {
 
         return manager.merge(restaurante); //
     }

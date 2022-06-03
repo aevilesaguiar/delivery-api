@@ -12,7 +12,7 @@ public interface RestauranteRepository {
 
     Restaurante findById(Long id);
 
-    Restaurante adicionar(Restaurante restaurante );
+    Restaurante salvar(Restaurante restaurante );
 
     void remover(Restaurante restaurante);
 

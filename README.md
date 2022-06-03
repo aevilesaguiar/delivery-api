@@ -1599,6 +1599,193 @@ serialVersionUID é usado para garantir que a mesma classe seja carregada durant
 processo de serialização). Funciona como um controle de versão em uma classe Serializable.
 
 
+## Exceções
+
+Podemos destacar que a exceção é um evento não esperado que ocorre no sistema quando está em tempo de execução (Runtime).
+Geralmente quando o sistema captura alguma exceção o fluxo do código fica interrompido.
+
+Para conseguir capturar uma exceção, é preciso fazer antes o tratamento. O uso dos tratamentos é importante nos sistemas 
+porque auxilia em falhas como: comunicação, leitura e escrita de arquivos, entrada de dados inválidos, acesso a elementos 
+fora de índice, entre outros.
+
+Classificação
+
+O uso das exceções em um sistema é de extrema importância, pois ajuda a detectar e tratar possíveis erros que possam acontecer. 
+Entretanto, na linguagem Java existem dois tipos de exceções, que são:
+
+- Implícitas: Exceções que não precisam de tratamento e demonstram serem contornáveis. Esse tipo origina-se da subclasse 
+Error ou RunTimeException.
+- Explícitas: Exceções que precisam ser tratadas e que apresentam condições incontornáveis. Esse tipo origina do modelo 
+throw e necessita ser declarado pelos métodos. É originado da subclasse Exception ou IOException.
+
+Existe também a formação de erros dos tipos throwables que são:
+
+- Checked Exception: Erros que acontecem fora do controle do programa, mas que devem ser tratados pelo desenvolvedor para
+o programa funcionar.
+- Unchecked (Runtime): Erros que podem ser evitados se forem tratados e analisados pelo desenvolvedor. Caso haja um tratamento
+para esse tipo de erro, o programa acaba parando em tempo de execução (Runtime).
+- Error: Usado pela JVM que serve para indicar se existe algum problema de recurso do programa, tornando a execução impossível
+de continuar.
+
+![](C:/Users/FLAVILES/AppData/Local/Temp/Excecoes_Java1.png)
+Figura 1: Exceções das classes.
+
+
+
+## Hierarquia de exceções
+
+No Java, todas as classes de exceção herdam direta ou indiretamente da classe Exception, formando uma hierarquia demonstrada na figura 2.
+
+![](C:/Users/FLAVILES/AppData/Local/Temp/Excecoes_Java2.jpg)
+Figura 2: Hierarquia de herança da classe Throwable.
+
+
+A classe Throwable tem duas subclasses:
+
+Exception (java.lang.Exception) – É a raiz das classes originárias da classe Throwable, onde mostra as situações em que 
+a aplicação pode querer capturar e realizar um tratamento para conseguir realizar o processamento.
+
+Error (java.lang.Error) – Também é raiz das classes originárias da classe Throwable, indicando as situações em que a 
+aplicação não deve tentar tratar, como ocorrências que não deveriam acontecer.
+
+Existe uma diferença entre “Erro (Error)” e “Exceção (Exception)”. O “Erro” é algo que não pode mais ser tratado, ao contrário
+da “Exceção” que trata seus erros, pois todas as subclasses de Exception (menos as subclasses RuntimeException) são exceções 
+e devem ser tratadas. Os erros da classe Error ou RuntimeException são erros e não precisam de tratamento, por esse motivo 
+é usado o try/catch e/ou propagação com throw/throws.
+
+
+## Blocos try/catch/finally
+
+
+O bloco try tenta processar o código que está dentro, sendo que se ocorrer uma exceção, a execução do código pula para a
+primeira captura do erro no bloco catch. O uso do try serve para indicar que o código está tentando realizar algo arriscado no sistema.
+
+O bloco catch trata a exceção lançada. Caso a exceção não seja esperada, a execução do código pula para o próximo catch, 
+se existir. Portanto, se nenhum do bloco catch conseguir capturar a exceção, dependendo o tipo que for, é causada a
+interrupção ao sistema, lançando a exceção do erro. Um exemplo do uso desse bloco é visto em transações de Rollback, 
+onde são utilizados para que a informação não persista no banco se for capturada uma exceção nesse bloco catch.
+
+A bloco finally sempre finaliza a sequência de comandos do sistema, independente de ocasionar algum erro no sistema. 
+Esse bloco é opcional, não sendo obrigatório sua inserção na sequência try/catch. É usado em ações que sempre precisam 
+ser executadas independente se gerar erro. Um exemplo é o fechamento da conexão de um banco de dados.
+
+
+Praticamente, o uso dos blocos try/catch se dá em métodos que envolvem alguma manipulação de dados, bem como:
+
+- CRUD no banco de dados;
+- Índices fora do intervalo de array;
+- Cálculos matemáticos;
+- I/O de dados;
+- Erros de rede;
+- Anulação de objetos;
+- Entre outros;
+
+
+## Cláusulas throw/throws
+
+As cláusulas throw e throws podem ser entendidas como ações que propagam exceções, ou seja, em alguns momentos existem 
+exceções que não podem ser tratadas no mesmo método que gerou a exceção. Nesses casos, é necessário propagar a exceção 
+para um nível acima na pilha. A listagem 2 mostra como usar o throws.
+
+stagem 2: Captura e tratamento da cláusula throws
+
+public static int calculaQuociente(int numerador, int denominador) throws ArithmeticException{
+return numerador / denominador;
+}
+
+Portanto, entende-se que a cláusula throws declara as exceções que podem ser lançadas em determinado método, sendo uma
+vantagem muitas vezes para outros desenvolvedores que mexem no código, pois serve para deixar de modo explícito o erro
+que pode acontecer no método, para o caso de não haver tratamento no código de maneira correta.
+
+Enquanto isso, a cláusula throw cria um novo objeto de exceção que é lançada. A listagem 3 mostra que é criada um 
+exceção IllegalArgumentException.
+
+
+## Métodos para captura de erros
+
+A classe Throwable oferece alguns métodos que podem verificar os erros reproduzidos, quando gerados para dentro das classes. 
+Esse tipo de verificação é visualizado no rastro da pilha (stracktrace), que mostra em qual linha foi gerada a exceção.
+Abaixo estão descritos os principais métodos que podem ser tratados no bloco catch para visualizar em que momento foi 
+gerado o erro.
+
+- printStrackTrace – Imprime uma mensagem da pilha de erro encontrada em um exceção.
+- getStrackTrace – Recupera informações do stracktrace que podem ser impressas através do método printStrackTrace.
+- getMessage – Retorna uma mensagem contendo a lista de erros armazenadas em um exceção no formato String.
+
+
+
+## Excceções utilizadas no treinamento
+
+Throw new EmptyResultDataAcessException() - > essa exceção é lançado quando quero remover algo que não existe
+
+DataIntegrityViolationException - qualquer violação de integridade do banco de dados
+
+Exceções de negócios uma exception que fala de algo de négocio
+
+public class EntidadeEmUsoException extends RuntimeException{
+
+    private static final long serialVersionUID=1L;
+
+    public EntidadeEmUsoException(String mensagem){
+        super(mensagem);
+    }
+
+
+}
+
+RuntimeException são exceções que podem ser evitadas fazendo uma verificação antes.
+Ex.:NullPointerException: se você fizer um if variavel == null, dá para evitá-la.
+
+Um outro exemplo, digamos que você tenha um sistema bancário com um método "sacar".Nela você poderia jogar uma exceção 
+SaldoInsuficienteException que estende RuntimeException caso o saldo seja insuficiente. Ela poderia ser evitada checando
+o saldo do usuário antes de invocar o sacar.
+
+Já Exception são exceções que não tem como evitar. Ex.: SQLException: você não tem como estar 100% seguro de que 
+não vai dar problema na conexão com o banco de dados, por isso é essencial fazer catch para tomar uma atitude.
+
+
+DataIntegrityViolationException: not-null property references a null
+
+JpaObjectRetrievalFailureException
+
+PropertyValueException
+EntityNotFoundException
+
+500 - Internal Server Error - Erro do servidor(ou seja programador)
+
+
+}
+
+##  o que significa serializar um objeto?
+
+Serializar um objeto, dentro da plataforma Java, significa converter o estado atual dele em um formato padrão e 
+depois disponibilizá-lo em um stream de bytes que poderá ser escrito em disco ou transmitido.
+
+Repare que a palavra serializar, dentro do Java, é um pouco mais do que “entregar em partes” – que seria a definição da
+mesma. É preciso que essas partes tenham uma estrutura padronizada para que seja possível a desserialização.
+
+
+O legal de notar é que, entre o momento em que ele foi colocado no stream de bytes até o momento de ser desserializado, 
+você pode encarar o “objeto” como se ele fosse um arquivo qualquer como, por exemplo, uma imagem ou um PDF, pois, ele 
+nada mais será que um amontoado de bytes. Portanto, como mencionei, você pode persistir em disco ou transmiti-lo pela 
+rede.
+
+Cenários comuns para o uso do mecanismo de serialização, dentro do ecossistema Java, são as invocações de métodos remotos
+(RPC) e também na replicação de sessões dos servidores web ou de aplicação.
+
+Provavelmente, você já sabe isso, mas quero lembrar que: para um objeto tornar candidato a ser serializado, ele e toda 
+a sua hierarquia de propriedades devem implementar a interface java.io.Serializable. Lembrando que muitas classes no 
+Java já fazem isso, inclusive, as classes wrappers juntamente com os seus primitivos – esses não implementam, pois, não 
+são classes, mas podem ser serializados.
+
+O que é o serialVersionUID?
+O serialVersionUID serve para rastrear a compatibilidade de versões serializadas das classes.
+
+Isso ocorre porque se você serializa uma instância de uma classe X e salva em um arquivo, e algum tempo depois altera a 
+classe X e desserializa aquela instância, pode ser que os dados desserializados não sejam compatíveis com a nova versão 
+da classe, uma vez que ela sofreu uma alteração.
+
+
 
 ## TODO
 
@@ -1608,7 +1795,19 @@ O erro ocorreu devido eu ter incluido o nome da entidade(entity) diferente da ta
 - Leitura: https://engsoftmoderna.info/artigos/ddd.html
 - Leitura: https://engsoftmoderna.info/
 - Leitura: https://martinfowler.com/bliki/DDD_Aggregate.html
-		
+
+Desafio
+
+- Consulta de Collection resource de restaurantes
+ GET/restaurantes            - coleção de recursos do restaurante
+
+- Consulta de singleton resource de restaurante
+ GET /restaurante/{id}            - recurso unico de restaurante
+- 
+
+## JPA 
+
+Jpa abstrai o uso do banco sql
 	
 ## Referencias
 
