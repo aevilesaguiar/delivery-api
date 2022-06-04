@@ -1,9 +1,8 @@
 package com.aeviles.deliveryapi.infrastructure.repository;
 
-import com.aeviles.deliveryapi.domain.model.Cozinha;
 import com.aeviles.deliveryapi.domain.model.Restaurante;
-import com.aeviles.deliveryapi.domain.repository.CozinhaRepository;
 import com.aeviles.deliveryapi.domain.repository.RestauranteRepository;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +32,19 @@ public class RestauranteRepositoryImpl implements RestauranteRepository {
 
         return manager.merge(restaurante); //
     }
+    @Transactional
+    @Override
+    public void remover(Long restauranteId) {
+      Restaurante restaurante= findById(restauranteId);
+
+      if(restaurante==null){
+          //senão encontrar pelo o menos 1
+          throw new EmptyResultDataAccessException(1);
+      }
+
+      manager.remove(restaurante);
+
+    }
 
     @Override
     public Restaurante findById(Long id) {
@@ -40,13 +52,12 @@ public class RestauranteRepositoryImpl implements RestauranteRepository {
         return manager.find(Restaurante.class, id);
     }
 
-    @Override
-    @Transactional //para ele ser executado dentro de uma transação
-    public void remover(Restaurante restaurante) {
-        restaurante = findById(restaurante.getId()); //isso é um find
-        manager.remove(restaurante);
 
-    }
+
+
+
+
+
 
 }
 

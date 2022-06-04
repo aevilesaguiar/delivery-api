@@ -2,6 +2,7 @@ package com.aeviles.deliveryapi.infrastructure.repository;
 
 import com.aeviles.deliveryapi.domain.model.Estado;
 import com.aeviles.deliveryapi.domain.repository.EstadoRepository;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
@@ -36,9 +37,14 @@ public class EstadoRepositoryImpl implements EstadoRepository {
     }
 
     @Override
-    public void remover(Estado estado) {
+    @Transactional
+    public void remover(Long id) {
+        Estado estado = findById(id);
 
-        estado=findById(estado.getId());
+        if (estado == null) {
+            throw new EmptyResultDataAccessException(1);
+        }
+
         manager.remove(estado);
     }
 }

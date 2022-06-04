@@ -41,6 +41,19 @@ public class RestauranteService {
     }
 
 
+    public void remover(Long restauranteId){
+
+        try {
+            restauranteRepository.remover(restauranteId);
+        }catch (EmptyResultDataAccessException e){
+            throw new EntidadeNaoEncontradaException(String.format("Não existe um cadastro de restaurantecom código %d",restauranteId));
+        }
+        catch (DataIntegrityViolationException e){
+            throw new EntidadeEmUsoException(String.format("Restaurante de código %d não pode ser removida, pois está em uso", restauranteId));
+        }
+
+    }
+
 
 
 

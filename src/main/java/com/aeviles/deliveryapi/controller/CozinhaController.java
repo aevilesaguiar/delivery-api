@@ -9,7 +9,6 @@ import com.aeviles.deliveryapi.domain.service.CozinhaService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -60,23 +59,27 @@ public class CozinhaController {
 
         //Utilizaremos ResponseEntity por que precisaremos tratar a resposta http
         @PutMapping("/{cozinhaId}")
-        public ResponseEntity<Cozinha> atualizar(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha) {//@PathVariable variavel de caminho
+        public ResponseEntity<?> atualizar(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha) {//@PathVariable variavel de caminho
                                                                                                              //@RequestBody por que queremos receber um corpo, que é a representação que queremos atualizar esse recurso
                                                                                                                 //@RequestBody agente está fazendo biding do corpo, o corpo que agente quer que seja atribuida a essa
                                                                                                                 //instancia que o spring vai criar de Cozinha e atribui as ptopriedades lá dentro
 
-                //cozinhaatual é a cozinha persistida no banco de dados  eu tenho que pegar cozinha e colocar dentro de cozinhaatual
-                Cozinha cozinhaatual = cozinhaRepository.findById(cozinhaId);
-                if(cozinhaatual!=null){
-                        //outra forma de fazer usando BeanUtils
-                        BeanUtils.copyProperties(cozinha, cozinhaatual, "id"); //Usamos BeanUtils e passamos o copyProperties, passando a origem e o destino  ou seja copie os valores das propriedades de cozinha e coloque dentro de cozinha atual ou seja ele vai pegar o set de cozinhaatual,pegando como valor o get de cozinha
-                        cozinhaatual=cozinhaService.salvar(cozinhaatual);
+                try {
+                        //cozinhaatual é a cozinha persistida no banco de dados  eu tenho que pegar cozinha e colocar dentro de cozinhaatual
+                        Cozinha cozinhaatual = cozinhaRepository.findById(cozinhaId);
+                        if (cozinhaatual != null) {
+                                //outra forma de fazer usando BeanUtils
+                                BeanUtils.copyProperties(cozinha, cozinhaatual, "id"); //Usamos BeanUtils e passamos o copyProperties, passando a origem e o destino  ou seja copie os valores das propriedades de cozinha e coloque dentro de cozinha atual ou seja ele vai pegar o set de cozinhaatual,pegando como valor o get de cozinha
+                                cozinhaatual = cozinhaService.salvar(cozinhaatual);
 
-                        return ResponseEntity.ok(cozinhaatual); //200 OK- Estas requisição foi bem sucedida. O significado do sucesso varia de acordo com o método HTTP:
+                                return ResponseEntity.ok(cozinhaatual); //200 OK- Estas requisição foi bem sucedida. O significado do sucesso varia de acordo com o método HTTP:
 
+                        }
+
+                        return ResponseEntity.notFound().build();
+                } catch (EntidadeNaoEncontradaException e){
+                        return ResponseEntity.badRequest().body(e.getMessage());
                 }
-                return  ResponseEntity.notFound().build();
-
 
                 }
 

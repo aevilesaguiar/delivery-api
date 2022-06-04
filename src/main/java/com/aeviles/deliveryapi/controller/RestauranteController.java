@@ -1,15 +1,18 @@
 package com.aeviles.deliveryapi.controller;
 
 
+import com.aeviles.deliveryapi.domain.exception.EntidadeEmUsoException;
 import com.aeviles.deliveryapi.domain.exception.EntidadeNaoEncontradaException;
 import com.aeviles.deliveryapi.domain.model.Restaurante;
 import com.aeviles.deliveryapi.domain.repository.RestauranteRepository;
 import com.aeviles.deliveryapi.domain.service.RestauranteService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 
 
@@ -48,7 +51,7 @@ public class RestauranteController {
 
         //usaremos responseEntity porque iremos customizar as respostas de status http
 
-        @PostMapping
+        @PostMapping //se eu colocar o coringa "?" aí eu posso dar um Response intety com um corpo de qualquer tipo
         public ResponseEntity<?> adicionar(@RequestBody Restaurante restaurante) {
                 try {
                         restaurante = restauranteService.salvar(restaurante);
@@ -60,6 +63,58 @@ public class RestauranteController {
                                 .body(e.getMessage());
                 }
         }
+        @DeleteMapping({"/restauranteId"})
+        public ResponseEntity<Restaurante>  remover(@PathVariable Long restauranteId){
+
+                try {
+                        restauranteService.remover(restauranteId);
+                        return ResponseEntity.noContent().build();
+                }
+
+                //Entidade não foi encontrada?
+                catch (EntidadeNaoEncontradaException e){
+
+                        return ResponseEntity.notFound().build();
+
+                }
+                //entidade está em uso?
+                catch (EntidadeEmUsoException e){
+                        return ResponseEntity.status(HttpStatus.CONFLICT).build();
+                }
+
+
+       }
+
+
+        @PutMapping("/{restauranteId}")
+        public ResponseEntity<?> atualizar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante){
+
+                try {
+                        //restauranteatual é o restaurante persistido no banco de dados  eu tenho que pegar restaurante e colocar dentro de restauranteatual
+                        Restaurante restauranteAtual = restauranteRepository.findById(restauranteId);
+
+                        if (restaurante != null) {
+                                BeanUtils.copyProperties(restaurante, restauranteAtual, "id");
+                                restauranteAtual = restauranteService.salvar(restauranteAtual);
+                                return ResponseEntity.ok(restauranteAtual);
+                        }
+
+
+                        return ResponseEntity.notFound().build(); //400
+
+                } catch (EntidadeNaoEncontradaException e){
+                        return ResponseEntity.badRequest().body(e.getMessage());//404
+                }
+
+
+
+
+
+
+        }
+
+
+
 
 
 }

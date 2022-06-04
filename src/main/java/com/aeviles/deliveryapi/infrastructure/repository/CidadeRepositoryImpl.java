@@ -3,6 +3,7 @@ package com.aeviles.deliveryapi.infrastructure.repository;
 import com.aeviles.deliveryapi.domain.model.Cidade;
 import com.aeviles.deliveryapi.domain.repository.CidadeRepository;
 import com.aeviles.deliveryapi.domain.repository.EstadoRepository;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
@@ -32,16 +33,20 @@ public class CidadeRepositoryImpl implements CidadeRepository {
 
     @Transactional
     @Override
-    public Cidade adicionar(Cidade cidade) {
+    public Cidade salvar(Cidade cidade) {
         return manager.merge(cidade);
     }
 
     @Override
     @Transactional
     public void remover(Long id) {
-      Cidade  cidade = findById(id);
-        manager.remove(cidade);
+        Cidade cidade = findById(id);
 
+        if (cidade == null) {
+            throw new EmptyResultDataAccessException(1);
+        }
+
+        manager.remove(cidade);
     }
 
 }

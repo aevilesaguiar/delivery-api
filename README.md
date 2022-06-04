@@ -1799,10 +1799,43 @@ O erro ocorreu devido eu ter incluido o nome da entidade(entity) diferente da ta
 Desafio
 
 - Consulta de Collection resource de restaurantes
- GET/restaurantes            - coleção de recursos do restaurante
+ GET/restaurantes            - coleção de recursos do restaurante [ok]
 
 - Consulta de singleton resource de restaurante
- GET /restaurante/{id}            - recurso unico de restaurante
+ GET /restaurante/{id}            - recurso unico de restaurante [ok]
+
+
+
+Desafio Modelando e implementando a atualização de recursos de restaurantes
+=============
+REQUEST - REQUISIÇÃO 
+============
+
+PUT /restaurantes/{id}
+
+{
+  "nome": "Bom Prato",
+  "taxaFrete": 5,
+  "cozinha":{
+        "id": 2
+    }
+}
+=============
+RESPONSE - RESPOSTA
+============
+
+HTTP/1.1 200 OK
+{...Representação do corpo da resposta}
+___________________________
+HTTP/1.1 400 BAD REQUEST
+
+Descrição do problema
+___________________________
+HTTP/1.1 404 Not Found
+
+
+
+- Passar um id errado -> retorna 404 not found
 - 
 
 ## JPA 

@@ -11,3 +11,7 @@ insert into estado(id, name) values (1,'Acre');
 insert into estado(id, name) values (2,'Alagoas');
 insert into estado(id, name) values (3,'Amapá');
 insert into estado(id, name) values (4,'Amazonas');
+
+
+insert into cidade(id, name, estado_id) values (1,'seila',1);
+
