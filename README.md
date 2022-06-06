@@ -1879,7 +1879,30 @@ Podemos fazer um POST para cadastrar um produto, e um post para cadastrar um pro
 Eles não tem preocupação nesse nível com os verbos http, nem com os códigos de status.
 
 
-- Nível 2 
+- Nível 2 -Verbos HTTP
+
+O nível 2 do Modelo de Maturidade Richardson introduz os verbos http de acordo com a semantica de cada um,e conforme o ptotocolo HTTP,
+Além disso usa também os códigos de status HTTP corretamente, esse é o nível em que as REST APIS se encontram hoje. 
+
+![img_60.png](img_60.png)
+Temos uma requisição fazendo um POst num recurso /produtos para fazer um cadastro de um novo produto, e passando a representação
+em XML
+
+A outra requisição está alterando um produto /recurso especifico veja a identificação do recurso/produtos/984 fazendo um PUT,
+ou seja alteração. Temos os recursos usando o URI.
+
+Lembrando que o formato do payload(do corpo que está enviando na requisição) não interfere em nada  no nível de maturidade da API.
+
+Exemplo usando json:
+
+![img_61.png](img_61.png)
+
+O que indica que uma API está nesse nível é o uso de recursos, verbos e códigos HTTP corretamente.
+
+Exemplo de resposta de uma API está dentro desse nível 2:
+
+![img_62.png](img_62.png)
+
 
 
 ## TODO
