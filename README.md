@@ -5,7 +5,7 @@
 - Introdução[ok]
 - Spring e Injeção de dependencias[ok]
 - Introdução JPA e Hibernate[ok]
-- REST com spring
+- REST com spring[ok]
 
 
 # Introdução 
