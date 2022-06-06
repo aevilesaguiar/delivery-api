@@ -1785,6 +1785,47 @@ Isso ocorre porque se você serializa uma instância de uma classe X e salva em 
 classe X e desserializa aquela instância, pode ser que os dados desserializados não sejam compatíveis com a nova versão 
 da classe, uma vez que ela sofreu uma alteração.
 
+## API do Refletion
+
+Reflection é uma API que é usada para examinar ou modificar o comportamento de métodos, classes e interfaces em tempo de 
+execução. As classes necessárias para reflexão são fornecidas no pacote java.lang.reflect , que é essencial para entender
+a reflexão. Por isso, estamos ilustrando o pacote com recursos visuais para uma melhor compreensão da seguinte forma:
+
+![](C:/Users/FLAVILES/AppData/Local/Temp/javalang.png)
+
+
+- A reflexão nos dá informações sobre a classe à qual um objeto pertence e também os métodos dessa classe que podem ser 
+executados usando o objeto.
+- Por meio da reflexão, podemos invocar métodos em tempo de execução, independentemente do especificador de acesso usado 
+com eles.
+
+
+A reflexão nos dá informações sobre a classe à qual um objeto pertence e também os métodos dessa classe que podem ser executados usando o objeto.
+Por meio da reflexão, podemos invocar métodos em tempo de execução, independentemente do especificador de acesso usado com eles.
+
+
+![](C:/Users/FLAVILES/AppData/Local/Temp/reflection.png)
+
+
+A reflexão pode ser usada para obter informações sobre classes, construtores e métodos, conforme ilustrado abaixo, em formato de tabela, conforme mostrado:
+
+Classe	->  O método getClass() é usado para obter o nome da classe à qual um objeto pertence.
+Construtores-> O método getConstructors() é usado para obter os construtores públicos da classe à qual um objeto pertence.
+Métodos	O método getMethods() -> é usado para obter os métodos públicos da classe à qual um objeto pertence.
+
+Podemos invocar um método por meio de reflexão se soubermos seu nome e tipos de parâmetro. Usamos dois métodos para esse fim, conforme descrito abaixo, antes de prosseguir da seguinte maneira:
+
+- getDeclaredMethod()
+- invocar()
+- 
+- 
+  Método 1: getDeclaredMethod(): Cria um objeto do método a ser invocado.
+
+Sintaxe: A sintaxe para este método
+
+Class.getDeclaredMethod(nome, tipo de parâmetro)
+
+Nota: Por meio da reflexão, podemos acessar as variáveis e métodos privados de uma classe com a ajuda de seu objeto de classe e invocar o método usando o objeto conforme discutido acima
 
 
 ## TODO
