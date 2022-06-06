@@ -1903,6 +1903,29 @@ Exemplo de resposta de uma API está dentro desse nível 2:
 
 ![img_62.png](img_62.png)
 
+- Nível 3 HATEOAS (acronimo - Hypertext As The Engine Of Application State)
+
+HATEOAS é um acronimo de Hypertext As The Engine Of Application State, ou seja hypertext como motor de estado da aplicação.
+Muitas pessoas preferem chamar apenas de hypermedia. O proposito central de hypermedia é dizer o que nós podemos fazer
+como próximo passo, após uma requisição em um recurso, e qual a URI desse próximo passo. Um exemplo simples é a navegação 
+em páginas web.
+
+![img_63.png](img_63.png)
+
+Exemplo de dois recursos
+
+A ideia de hypermedia/ hateoas em API é ajudar os consumidores da API a descobrirem a funcionalidade do fluxo de navegação
+
+![img_64.png](img_64.png)
+
+- Root Entry Point- seria como se fosse o index de uma API, e ele direciona para o recurso /produtos, o cliente da requisição
+faz uma requisição, e ele vai seguindo os links, e pode ser um link para ele mesmo.
+
+Exemplo do nível 3
+
+![img_65.png](img_65.png)
+
+Ele não informa os verbos http, apenas as uri's como mostra acima. 
 
 
 ## TODO
