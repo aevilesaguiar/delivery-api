@@ -1828,6 +1828,44 @@ Class.getDeclaredMethod(nome, tipo de parâmetro)
 Nota: Por meio da reflexão, podemos acessar as variáveis e métodos privados de uma classe com a ajuda de seu objeto de classe e invocar o método usando o objeto conforme discutido acima
 
 
+## Modelo de Maturidade de Richardson (RMM)
+
+Leonardo de Maturidade de Richardson. E le possui 4 níveis, de 0 a 3.
+
+![img_55.png](img_55.png)
+
+Apenas na teoria  apenas o nível 3 é considerado como REST de acordo com RoyField
+
+No mercado a maioria usa o Nível 2 (verbos HTTP), 
+Sempre é bom perguntar o nivel da API.
+
+Vai ficando mais difícil quando aumentamos o nível de maturidade.
+
+- Nível 0 - POX (Plain Old XML) - Ou seja quando uma API pode ser considerada desse nível.
+
+O nível 0 é o mais rudimentar, APIS nesse nível não deveriam ser consideradas de REST, na prática o mercado não considera
+que esse nível é REST. Uma API nesse nível de maturidade usa o protocolo HTTP apenas como mecanismo de transporte de dados,
+não usa os verbos nem os status HTTP de forma correta , conforme o protocolo. Algumas podem usam o método POST,
+outras usar o método GET, não tem nenhuma regra já que a semântica dos verbos HTTP não é levada em consideração nesse
+nivel. Esse tipo de API usa o modelo RPC, que é um acronimo de Remote Procedure Call, chamada de procedimentos remotos,
+basicamente é um tipo de API onde tem o transporte de XML, json ou qualquer outro formato de dados. Geralmente uma API 
+nesse nível tem um único endpoint, ou seja uma unica URL
+
+![img_56.png](img_56.png)
+
+Nesse caso podemos ver um endpoint da API acima, /servicoLoja é um endpoint único, o verbo não muda, apenas o que altera o corpo.
+
+![img_57.png](img_57.png)
+
+Não é o formato dos dados que define se está dentro do nível zero ou não, ou seja podemos usar json, xml e outros.
+
+Dois exemplos de resposta de uma API nesse nível de maturidade 0
+
+![img_58.png](img_58.png)
+
+Se eu pedir para cadastrar um produto ele retorna 200 ok, mas se der um erro ele retorna um 200ok também, 
+Não existe o uso dos códigos de status HTTP.
+
 ## TODO
 
 - Investigar ->https://javabydeveloper.com/org-hibernate-hql-internal-ast-querysyntaxexception-entity-table-is-not-mapped/

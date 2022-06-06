@@ -114,6 +114,7 @@ public class RestauranteController {
 
         }
 
+        //referencia apenas - achei dificil
         @PatchMapping("/{restauranteId}")
         public ResponseEntity<?> atualizarParcial(@PathVariable Long restauranteId,
                                                   @RequestBody Map<String, Object> campos) {
@@ -145,9 +146,11 @@ public class RestauranteController {
                         //eu quero tornar a vaiável acessivel, permitimos o acesso e o acessamos
                         field.setAccessible(true);
 
+                        //buscamos o valor da propriedade field
                         Object novoValor = ReflectionUtils.getField(field, restauranteOrigem);
 
 			System.out.println(nomePropriedade + " = " + valorPropriedade + " = " + novoValor);
+
 
                         ReflectionUtils.setField(field, restauranteDestino, novoValor);
                 });
