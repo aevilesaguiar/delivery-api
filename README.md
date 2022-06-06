@@ -1866,6 +1866,22 @@ Dois exemplos de resposta de uma API nesse nível de maturidade 0
 Se eu pedir para cadastrar um produto ele retorna 200 ok, mas se der um erro ele retorna um 200ok também, 
 Não existe o uso dos códigos de status HTTP.
 
+- Nível 1 - recursos
+
+O nível 1 do modelo de maturidade de Richardson é quando nós começamos a fazer requisições para URI'S que identificam recursos,
+Então apartir desse nível temos um único endpoint como era no nível 0, Nesse nível 1 ainda não se usa corretamente os verbos HTTP.
+E nem os códigos de status conforme o protocolo http. o corpo da requisição e resposta também são parecidos com o nível 0.
+O tipo de procedimento  que deve ser executado ainda é definido no corpo como podemos ver no exemplo.
+
+![img_59.png](img_59.png)
+
+Podemos fazer um POST para cadastrar um produto, e um post para cadastrar um produto em específico. Os verbos HTTP não fazem diferença.
+Eles não tem preocupação nesse nível com os verbos http, nem com os códigos de status.
+
+
+- Nível 2 
+
+
 ## TODO
 
 - Investigar ->https://javabydeveloper.com/org-hibernate-hql-internal-ast-querysyntaxexception-entity-table-is-not-mapped/
